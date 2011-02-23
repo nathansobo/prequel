@@ -1,0 +1,7 @@
+development:
+  adapter: postgres
+  database: keep_development
+
+test:
+  adapter: postgres
+  database: keep_test
