@@ -9,6 +9,7 @@ group :development, :test do
   gem 'rspec', '~> 2.5.0'
   gem 'rspec-rails', '~> 2.5.0'
   gem 'rr'
+  gem 'differ'
   gem 'spork', '~> 0.9.0.rc'
 end
 

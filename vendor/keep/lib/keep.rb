@@ -5,3 +5,5 @@ module Keep
     Relations::Table.new(name, &block)
   end
 end
+
+require 'keep/core_extensions'
