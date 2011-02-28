@@ -18,6 +18,13 @@ module Keep
       def table_ref(query)
         query.add_subquery(self)
       end
+
+      protected
+
+      def derive_column_from(operand, name)
+        column = operand.get_column(name)
+        Expressions::DerivedColumn.new(self, column) if column
+      end
     end
   end
 end

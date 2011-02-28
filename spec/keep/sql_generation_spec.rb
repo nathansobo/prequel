@@ -23,7 +23,7 @@ module Keep
 
     specify "selections" do
       posts.where(:blog_id => 1).to_sql.should be_like_query(%{
-        select * from posts posts.blog_id = :v1
+        select * from posts where posts.blog_id = :v1
       }, :v1 => 1)
     end
 
@@ -32,7 +32,14 @@ module Keep
         select * from blogs inner join posts on blogs.id = posts.blog_id
       })
 
-      p blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).to_sql
+      blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).to_sql.should be_like_query(%{
+        select *
+        from
+          (select *
+           from blogs
+           where t1.user_id = :v1) as t1
+        inner join posts on t1.id = posts.blog_id
+      }, :v1 => 1)
     end
   end
 end

@@ -2,14 +2,11 @@ module Keep
   module Sql
     class Query
       attr_reader :table_ref, :conditions, :literals, :subqueries
-      attr_accessor :literal_count, :subquery_count
-      
+
       def initialize
         @conditions = []
         @literals = {}
-        @literal_count = 0
         @subqueries = {}
-        @subquery_count = 0
       end
 
       def table_ref=(table_ref)
@@ -28,8 +25,7 @@ module Keep
       end
 
       def add_subquery(relation)
-        name = "t#{subqueries.size + 1}"
-        subqueries[name] = Subquery.new(name).tap do |subquery|
+        subqueries[relation] = Subquery.new("t#{subqueries.size + 1}").tap do |subquery|
           relation.visit(subquery)
         end
       end

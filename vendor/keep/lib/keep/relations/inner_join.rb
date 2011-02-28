@@ -9,7 +9,7 @@ module Keep
       end
 
       def get_column(name)
-        left.get_column(name) || right.get_column(name)
+        derive_column_from(left, name) || derive_column_from(right, name)
       end
 
       def visit(query)

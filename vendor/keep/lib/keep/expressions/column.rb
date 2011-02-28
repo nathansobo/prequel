@@ -1,6 +1,6 @@
-module Keep
-  module Expressions
-    class Column
+  module Keep
+    module Expressions
+      class Column
       attr_reader :table, :name, :type
 
       def initialize(table, name, type)
