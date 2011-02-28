@@ -5,14 +5,14 @@ module Keep
     attr_reader :blogs, :posts
     before do
       @blogs = Keep.table(:blogs) do
-        column :id, :key
-        column :user_id, :key
+        column :id, :integer
+        column :user_id, :integer
         column :title, :string
       end
 
       @posts = Keep.table(:posts) do
-        column :id, :key
-        column :blog_id, :key
+        column :id, :integer
+        column :blog_id, :integer
         column :title, :string
       end
     end

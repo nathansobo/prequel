@@ -7,7 +7,7 @@ module Keep
 
       before do
         @blogs = Keep.table(:blogs) do
-          column :id, :key
+          column :id, :integer
         end
       end
 
@@ -22,6 +22,19 @@ module Keep
           blogs.get_column(:id).should == blogs.columns_by_name[:id]
           blogs.get_column(:garbage).should be_nil
         end
+      end
+
+      describe "#all" do
+        before do
+          class Blog < Keep::Record
+            column :id, :integer
+            column :user_id, :integer
+            column :title, :string
+          end
+          Blog.table.create_table
+        end
+
+        it "returns all records as instances of the table's tuple class"
       end
     end
   end

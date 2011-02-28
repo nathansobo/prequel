@@ -1,9 +1,9 @@
 module Keep
   module Relations
     class Table < Relation
-      attr_reader :name, :columns_by_name
-      def initialize(name, &block)
-        @name = name
+      attr_reader :name, :columns_by_name, :tuple_class
+      def initialize(name, tuple_class=nil, &block)
+        @name, @tuple_class = name, tuple_class
         @columns_by_name = {}
         TableDefinitionContext.new(self).instance_eval(&block) if block
       end
@@ -18,6 +18,10 @@ module Keep
           return nil unless qualifier == name
         end
         columns_by_name[column_name]
+      end
+
+      def columns
+        columns_by_name.values
       end
 
       def [](col_name)
