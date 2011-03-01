@@ -4,7 +4,7 @@ module Keep
       attr_reader :left, :right, :predicate
 
       def initialize(left, right, predicate)
-        @left, @right = left, right
+        @left, @right = left.to_relation, right.to_relation
         @predicate = predicate.to_predicate.resolve_columns(self)
       end
 

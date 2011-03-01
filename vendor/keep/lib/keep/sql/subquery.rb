@@ -1,10 +1,11 @@
 module Keep
   module Sql
     class Subquery < Query
-      attr_reader :name
+      attr_reader :relation, :name
+      delegate :columns, :to => :relation
 
-      def initialize(name)
-        @name = name
+      def initialize(relation, name)
+        @relation, @name = relation, name
         super()
       end
 

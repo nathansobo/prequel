@@ -12,6 +12,12 @@ module Keep
         derive_column_from(operand, name)
       end
 
+      def columns
+        operand.columns.map do |column|
+          derive_column(column)
+        end
+      end
+
       def visit(query)
         query.add_condition(predicate)
         operand.visit(query)

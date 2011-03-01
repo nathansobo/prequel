@@ -31,7 +31,7 @@ module Keep
             column :user_id, :integer
             column :title, :string
           end
-          Blog.table.create_table
+          Blog.create_table
         end
 
         it "returns all records as instances of the table's tuple class" do

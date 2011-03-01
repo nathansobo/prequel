@@ -1,10 +1,12 @@
 module Keep
   module Relations
     class Relation
-      def to_sql
+      delegate :to_sql, :all, :to => :query
+
+      def query
         Sql::Query.new.tap do |query|
           visit(query)
-        end.to_sql
+        end
       end
 
       def join(right, predicate)
@@ -19,11 +21,19 @@ module Keep
         query.add_subquery(self)
       end
 
+      def to_relation
+        self
+      end
+
       protected
 
       def derive_column_from(operand, name)
         column = operand.get_column(name)
-        Expressions::DerivedColumn.new(self, column) if column
+        derive_column(column) if column
+      end
+
+      def derive_column(column)
+        Expressions::DerivedColumn.new(self, column)
       end
     end
   end

@@ -3,9 +3,13 @@ module Keep
     class_attribute :relation
 
     class << self
-      delegate :all, :columns, :delete, :join, :to => :relation
+      delegate :all, :[], :columns, :delete, :join, :to => :relation
 
-      def table # alias doesn't work here. because of #class_attribute?
+      def table
+        relation
+      end
+
+      def to_relation
         relation
       end
 
@@ -36,6 +40,10 @@ module Keep
       soft_update_fields(values)
     end
 
+    def table
+      relation
+    end
+
     def soft_update_fields(values)
       values.each do |name, value|
         set_field_value(name, value)
@@ -55,6 +63,10 @@ module Keep
         h[name] = field.value
         h
       end
+    end
+
+    def get_tuple(table_name)
+      self if table_name == table.name
     end
 
     delegate :inspect, :to => :field_values

@@ -1,5 +1,6 @@
 require 'keep/relations/table'
 require 'keep/expressions/column'
+require 'keep/record'
 
 module Keep
   module Relations
@@ -31,7 +32,10 @@ module Keep
       end
 
       def drop_table
-        DB.drop_table(name)
+        if DB.table_exists?(name)
+          DB.drop_table(name)
+          created_tables.delete(self)
+        end
       end
     end
   end
@@ -49,5 +53,9 @@ module Keep
         end
       end
     end
+  end
+
+  class Record
+    singleton_class.delegate :create_table, :to => :table
   end
 end
