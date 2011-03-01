@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.4'
 gem 'pg', '0.9.0'
 gem 'sequel', '3.16.0'
-gem 'sequel_rails3'
+gem 'sequel-rails'
 
 group :development, :test do
   gem 'rspec', '~> 2.5.0'

@@ -3,7 +3,7 @@ module Keep
     class_attribute :relation
 
     class << self
-      delegate :columns, :delete, :join, :to => :relation
+      delegate :all, :columns, :delete, :join, :to => :relation
 
       def table # alias doesn't work here. because of #class_attribute?
         relation

@@ -35,6 +35,12 @@ module Keep
       def table_ref(query)
         Sql::TableRef.new(name)
       end
+
+      def all
+        DB.fetch(*to_sql).map do |field_values|
+          tuple_class.new(field_values)
+        end
+      end
     end
   end
 end
