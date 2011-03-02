@@ -50,8 +50,12 @@ module Keep
         table_ref.to_sql(query)
       end
 
+      def rows
+        DB[*to_sql]
+      end
+
       def all
-        DB[*to_sql].map do |field_values|
+        rows.map do |field_values|
           table_ref.build_tuple(field_values)
         end
       end

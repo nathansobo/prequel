@@ -16,9 +16,11 @@ module Keep
       end
 
       def select_list
-        (left.columns + right.columns).map do |column|
-          column.as_qualified
-        end
+        columns.map(&:as_qualified)
+      end
+
+      def columns
+        left.columns + right.columns
       end
 
       def build_tuple(field_values)

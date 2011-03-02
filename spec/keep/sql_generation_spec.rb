@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Keep
   describe "SQL generation" do
-    attr_reader :blogs, :posts
+    attr_reader :blogs, :posts, :comments
     before do
       @blogs = Keep.table(:blogs) do
         column :id, :integer
@@ -14,6 +14,12 @@ module Keep
         column :id, :integer
         column :blog_id, :integer
         column :title, :string
+      end
+
+      @comments = Keep.table(:comments) do
+        column :id, :integer
+        column :post_id, :integer
+        column :body, :string
       end
     end
 
@@ -27,7 +33,7 @@ module Keep
       }, :v1 => 1)
     end
 
-    specify "inner joins" do
+    specify "simple inner joins" do
       blogs.join(posts, blogs[:id] => :blog_id).to_sql.should be_like_query(%{
         select
           blogs.id as blogs__id,
@@ -39,7 +45,9 @@ module Keep
         from
           blogs inner join posts on blogs.id = posts.blog_id
       })
+    end
 
+    specify "inner joins with subqueries" do
       blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).to_sql.should be_like_query(%{
         select
           t1.id as t1__id,
@@ -54,7 +62,28 @@ module Keep
             where t1.user_id = :v1
           ) as t1
           inner join posts on t1.id = posts.blog_id
-      }, :v1 => 1)
+        }, :v1 => 1)
+    end
+    
+    specify "left-associative inner joins with more than two tables" do
+      blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).join(comments, posts[:id] => :post_id).to_sql.should be_like_query(%{
+        select
+          t1.id as t1__id,
+          t1.user_id as t1__user_id,
+          t1.title as t1__title,
+          posts.id as posts__id,
+          posts.blog_id as posts__blog_id,
+          posts.title as posts__title,
+          comments.id as comments__id,
+          comments.post_id as comments__post_id,
+          comments.body as comments__body
+        from
+          (
+            select * from blogs where t1.user_id = :v1
+          ) as t1
+          inner join posts on t1.id = posts.blog_id
+          inner join comments on posts.id = comments.post_id
+        }, :v1 => 1)
     end
   end
 end
