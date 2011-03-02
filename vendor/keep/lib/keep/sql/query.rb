@@ -2,15 +2,29 @@ module Keep
   module Sql
     class Query
       attr_accessor :select_list
-      attr_reader :relation, :table_ref, :conditions, :literals, :named_table_refs, :subquery_count, :query_columns
+      attr_reader :relation, :table_ref, :conditions, :literals, :singular_table_refs, :subquery_count, :query_columns
 
       def initialize(relation)
         @relation = relation
         @conditions = []
         @literals = {}
-        @named_table_refs = { relation => self }
+        @singular_table_refs = { relation => self }
         @subquery_count = 0
         @query_columns = {}
+      end
+
+      def all
+        result_set.map do |field_values|
+          table_ref.build_tuple(field_values)
+        end
+      end
+
+      def result_set
+        DB[*to_sql]
+      end
+
+      def to_sql
+        [sql_string, literals]
       end
 
       def build
@@ -33,36 +47,22 @@ module Keep
         end
       end
 
-      def resolve_derived_column(column, qualified=false)
-        query_columns[column] ||= begin
-          resolved_ancestor = column.ancestor.resolve_in_query(self)
-          resolved_name = qualified ? resolved_ancestor.qualified_name : column.name
-          Sql::DerivedQueryColumn.new(self, resolved_name, resolved_ancestor)
-        end
-      end
-
-      def add_named_table_ref(relation, table_ref)
-        named_table_refs[relation] = table_ref
+      def add_singular_table_ref(relation, table_ref)
+        singular_table_refs[relation] = table_ref
       end
 
       def add_subquery(relation)
         @subquery_count += 1
         subquery = Subquery.new(self, relation, "t#{subquery_count}")
-        add_named_table_ref(relation, subquery)
+        add_singular_table_ref(relation, subquery)
         subquery.build
       end
 
-      def to_sql
-        [sql_string, literals]
-      end
-
-      def rows
-        DB[*to_sql]
-      end
-
-      def all
-        rows.map do |field_values|
-          table_ref.build_tuple(field_values)
+      def resolve_derived_column(column, qualified=false)
+        query_columns[column] ||= begin
+          resolved_ancestor = column.ancestor.resolve_in_query(self)
+          resolved_name = qualified ? resolved_ancestor.qualified_name : column.name
+          Sql::DerivedQueryColumn.new(self, resolved_name, resolved_ancestor)
         end
       end
 

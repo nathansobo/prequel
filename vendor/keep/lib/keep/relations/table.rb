@@ -12,6 +12,10 @@ module Keep
         columns_by_name[name] = Expressions::Column.new(self, name, type)
       end
 
+      def [](col_name)
+        "#{name}__#{col_name}".to_sym
+      end
+
       def get_column(column_name)
         if column_name.match(/(.+)__(.+)/)
           qualifier, column_name = $1.to_sym, $2.to_sym
@@ -24,21 +28,22 @@ module Keep
         columns_by_name.values
       end
 
-      def [](col_name)
-        "#{name}__#{col_name}".to_sym
-      end
-
       def visit(query)
         query.table_ref = table_ref(query)
       end
 
       def single_table_ref(query)
-        query.add_named_table_ref(self, Sql::TableRef.new(self))
+        query.add_singular_table_ref(self, Sql::TableRef.new(self))
       end
 
-      def all
-        DB.fetch(*to_sql).map do |field_values|
-          tuple_class.new(field_values)
+      class TableDefinitionContext
+        attr_reader :table
+        def initialize(table)
+          @table = table
+        end
+
+        def column(name, type)
+          table.def_column(name, type)
         end
       end
     end

@@ -13,7 +13,7 @@ module Keep
         ['(', sql_string, ') as ', name].join
       end
 
-      delegate :add_literal, :add_named_table_ref, :add_subquery, :named_table_refs, :to => :parent
+      delegate :add_literal, :add_singular_table_ref, :add_subquery, :singular_table_refs, :to => :parent
     end
   end
 end

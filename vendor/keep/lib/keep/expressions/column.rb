@@ -12,7 +12,7 @@ module Keep
       end
 
       def resolve_in_query(query)
-        query.named_table_refs[table].resolve_column(self)
+        query.singular_table_refs[table].resolve_column(self)
       end
     end
   end

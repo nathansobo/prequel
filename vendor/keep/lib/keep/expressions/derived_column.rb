@@ -9,7 +9,7 @@ module Keep
       end
 
       def resolve_in_query(query)
-        if subquery = query.named_table_refs[relation]
+        if subquery = query.singular_table_refs[relation]
           subquery.resolve_derived_column(self)
         else
           ancestor.resolve_in_query(query)

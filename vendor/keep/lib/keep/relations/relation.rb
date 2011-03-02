@@ -1,7 +1,7 @@
 module Keep
   module Relations
     class Relation
-      delegate :to_sql, :rows, :all, :to => :query
+      delegate :to_sql, :result_set, :all, :to => :query
 
       def query
         Sql::Query.new(self).build
