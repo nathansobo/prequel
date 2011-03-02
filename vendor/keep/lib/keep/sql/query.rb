@@ -2,7 +2,7 @@ module Keep
   module Sql
     class Query
       attr_accessor :select_list
-      attr_reader :table_ref, :conditions, :literals, :named_table_refs, :subquery_count
+      attr_reader :relation, :table_ref, :conditions, :literals, :named_table_refs, :subquery_count, :query_columns
 
       def initialize(relation)
         @relation = relation
@@ -10,7 +10,12 @@ module Keep
         @literals = {}
         @named_table_refs = { relation => self }
         @subquery_count = 0
+        @query_columns = {}
+      end
+
+      def build
         relation.visit(self)
+        self
       end
 
       def table_ref=(table_ref)
@@ -28,13 +33,23 @@ module Keep
         end
       end
 
+      def resolve_derived_column(column, qualified=false)
+        query_columns[column] ||= begin
+          resolved_ancestor = column.ancestor.resolve_in_query(self)
+          resolved_name = qualified ? resolved_ancestor.qualified_name : column.name
+          Sql::DerivedQueryColumn.new(self, resolved_name, resolved_ancestor)
+        end
+      end
+
       def add_named_table_ref(relation, table_ref)
         named_table_refs[relation] = table_ref
       end
 
       def add_subquery(relation)
         @subquery_count += 1
-        add_named_table_ref(relation, Subquery.new(self, relation, "t#{subquery_count}"))
+        subquery = Subquery.new(self, relation, "t#{subquery_count}")
+        add_named_table_ref(relation, subquery)
+        subquery.build
       end
 
       def to_sql

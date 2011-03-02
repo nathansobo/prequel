@@ -14,19 +14,21 @@ module Keep
 
       def columns
         (left.columns + right.columns).map do |column|
-          derive_column(column, :qualified)
+          derive_column(column)
         end
       end
 
       def visit(query)
         query.table_ref = table_ref(query)
-        query.select_list = columns.map do |column|
-          column.resolve_in_query(query)
+        if my_subquery = query.named_table_refs[self]
+          query.select_list = columns.map do |derived_column|
+            my_subquery.resolve_derived_column(derived_column, :qualified)
+          end
         end
       end
 
       def table_ref(query)
-        Sql::InnerJoinedTableRef.new(left.table_ref(query), right.table_ref(query), predicate.resolve_in_query(query))
+        Sql::InnerJoinedTableRef.new(left.table_ref(query), right.single_table_ref(query), predicate.resolve_in_query(query))
       end
     end
   end

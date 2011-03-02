@@ -4,7 +4,7 @@ module Keep
       delegate :to_sql, :rows, :all, :to => :query
 
       def query
-        Sql::Query.new(self)
+        Sql::Query.new(self).build
       end
 
       def join(right, predicate)
@@ -16,6 +16,10 @@ module Keep
       end
 
       def table_ref(query)
+        single_table_ref(query)
+      end
+
+      def single_table_ref(query)
         query.add_subquery(self)
       end
 
@@ -33,8 +37,8 @@ module Keep
         derive_column(column) if column
       end
 
-      def derive_column(column, qualified=false)
-        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column, qualified)
+      def derive_column(column)
+        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column)
       end
     end
   end

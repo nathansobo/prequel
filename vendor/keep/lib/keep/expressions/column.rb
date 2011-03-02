@@ -12,7 +12,7 @@ module Keep
       end
 
       def resolve_in_query(query)
-        Sql::Column.new(query.named_table_refs[table], name)
+        query.named_table_refs[table].resolve_column(self)
       end
     end
   end

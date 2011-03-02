@@ -1,6 +1,6 @@
 module Keep
   module Sql
-    class Column
+    class QueryColumn
       attr_reader :table_ref, :name
       def initialize(table_ref, name)
         @table_ref, @name = table_ref, name

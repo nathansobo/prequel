@@ -1,15 +1,20 @@
 module Keep
   module Sql
     class TableRef
-      attr_reader :relation
+      attr_reader :relation, :query_columns
       delegate :name, :columns, :tuple_class, :to => :relation
 
       def initialize(relation)
         @relation = relation
+        @query_columns = {}
       end
 
       def to_sql
         name
+      end
+
+      def resolve_column(column)
+        query_columns[column] ||= Sql::QueryColumn.new(self, column.name)
       end
 
       def build_tuple(field_values)

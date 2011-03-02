@@ -1,6 +1,6 @@
 module Keep
   module Sql
-    class DerivedColumn
+    class DerivedQueryColumn
       attr_reader :subquery, :name, :ancestor
 
       def initialize(subquery, name, ancestor)
