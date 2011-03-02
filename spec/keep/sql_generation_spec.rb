@@ -59,7 +59,7 @@ module Keep
         from (
             select *
             from blogs
-            where t1.user_id = :v1
+            where blogs.user_id = :v1
           ) as t1
           inner join posts on t1.id = posts.blog_id
         }, :v1 => 1)
@@ -79,7 +79,9 @@ module Keep
           comments.body as comments__body
         from
           (
-            select * from blogs where t1.user_id = :v1
+            select *
+            from blogs
+            where blogs.user_id = :v1
           ) as t1
           inner join posts on t1.id = posts.blog_id
           inner join comments on posts.id = comments.post_id
