@@ -3,9 +3,9 @@ module Keep
     class InnerJoin < Relation
       attr_reader :left, :right, :predicate
 
-      def initialize(left, right, predicate)
-        @left, @right = left.to_relation, right.to_relation
-        @predicate = predicate.to_predicate.resolve_columns(self)
+      def initialize(left_operand, right_operand, predicate)
+        @left, @right = left_operand.to_relation, right_operand.to_relation
+        @predicate = predicate.to_predicate.resolve_columns(left, right)
       end
 
       def get_column(name)

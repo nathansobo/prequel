@@ -3,27 +3,40 @@ require 'spec_helper'
 module Keep
   module Relations
     describe InnerJoin do
+      before do
+        class Blog < Keep::Record
+          column :id, :integer
+          column :user_id, :integer
+          column :title, :string
+        end
+
+        class Post < Keep::Record
+          column :id, :integer
+          column :blog_id, :integer
+          column :title, :string
+        end
+
+        class Comment < Keep::Record
+          column :id, :integer
+          column :post_id, :integer
+          column :body, :string
+        end
+      end
+
+      describe "#initialize" do
+        it "evaluates the join predicate in terms of columns derived from the underlying tables" do
+          simple_join = Blog.join(Post, Blog[:id] => Post[:blog_id])
+          simple_join.predicate.left.should == Blog.table.get_column(:id)
+          simple_join.predicate.right.should == Post.table.get_column(:blog_id)
+
+          compound_join = simple_join.join(Comment, Post[:id] => Comment[:post_id])
+          compound_join.predicate.left.should == simple_join.get_column(Post[:id])
+          compound_join.predicate.right.should == Comment.table.get_column(:post_id)
+        end
+      end
+
       describe "#all" do
-
         before do
-          class Blog < Keep::Record
-            column :id, :integer
-            column :user_id, :integer
-            column :title, :string
-          end
-
-          class Post < Keep::Record
-            column :id, :integer
-            column :blog_id, :integer
-            column :title, :string
-          end
-
-          class Comment < Keep::Record
-            column :id, :integer
-            column :post_id, :integer
-            column :body, :string
-          end
-
           Blog.create_table
           Post.create_table
           Comment.create_table

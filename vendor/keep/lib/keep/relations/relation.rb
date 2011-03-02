@@ -24,6 +24,9 @@ module Keep
       end
 
       protected
+      def derived_columns
+        @derive_columns ||= {}
+      end
 
       def derive_column_from(operand, name)
         column = operand.get_column(name)
@@ -31,7 +34,7 @@ module Keep
       end
 
       def derive_column(column)
-        Expressions::DerivedColumn.new(self, column)
+        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column)
       end
     end
   end
