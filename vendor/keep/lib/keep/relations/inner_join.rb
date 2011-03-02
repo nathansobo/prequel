@@ -20,10 +20,8 @@ module Keep
 
       def visit(query)
         query.table_ref = table_ref(query)
-        if my_subquery = query.singular_table_refs[self]
-          query.select_list = columns.map do |derived_column|
-            my_subquery.resolve_derived_column(derived_column, :qualified)
-          end
+        query.select_list = columns.map do |derived_column|
+          query.resolve_derived_column(derived_column, :qualified)
         end
       end
 
