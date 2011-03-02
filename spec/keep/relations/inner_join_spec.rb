@@ -24,7 +24,7 @@ module Keep
       end
 
       describe "#initialize" do
-        it "evaluates the join predicate in terms of columns derived from the underlying tables" do
+        it "resolves symbols in the join's predicate to columns derived from the join's operands, not the join itself" do
           simple_join = Blog.join(Post, Blog[:id] => Post[:blog_id])
           simple_join.predicate.left.should == Blog.table.get_column(:id)
           simple_join.predicate.right.should == Post.table.get_column(:blog_id)

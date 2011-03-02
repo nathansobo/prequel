@@ -7,5 +7,8 @@ RSpec.configure do |config|
 
   config.after do
     Keep::Relations::Table.drop_all_tables
+    Keep::Record.subclasses.each do |subclass|
+      subclass.remove_class
+    end
   end
 end

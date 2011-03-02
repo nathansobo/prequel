@@ -3,7 +3,7 @@ module Keep
     class_attribute :relation
 
     class << self
-      delegate :all, :rows, :[], :columns, :delete, :join, :to => :relation
+      delegate :all, :rows, :[], :columns, :delete, :where, :join, :to => :relation
 
       def table
         relation

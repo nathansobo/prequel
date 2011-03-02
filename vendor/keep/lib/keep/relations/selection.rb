@@ -5,7 +5,7 @@ module Keep
 
       def initialize(operand, predicate)
         @operand = operand
-        @predicate = predicate.to_predicate.resolve_columns(self)
+        @predicate = predicate.to_predicate.resolve_columns(operand)
       end
 
       def get_column(name)
