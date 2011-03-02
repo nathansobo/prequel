@@ -20,7 +20,7 @@ module Keep
 
       def visit(query)
         operand.visit(query)
-        query.add_condition(predicate)
+        query.add_condition(predicate.resolve_in_query(query))
       end
     end
   end

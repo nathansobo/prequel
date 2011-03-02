@@ -33,7 +33,7 @@ module Keep
       end
 
       def table_ref(query)
-        Sql::TableRef.new(self)
+        query.add_named_table_ref(self, Sql::TableRef.new(self))
       end
 
       def all

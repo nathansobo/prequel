@@ -11,6 +11,10 @@ module Keep
         Equal.new(self, other)
       end
 
+      def resolve_in_query(query)
+        Sql::Column.new(query.named_table_refs[table], name)
+      end
+
       def as_qualified
         Sql::QualifiedColumn.new(self)
       end

@@ -1,20 +1,21 @@
 module Keep
   module Sql
     class Query
-      attr_reader :select_list, :table_ref, :conditions, :literals, :subqueries
+      attr_accessor :select_list
+      attr_reader :table_ref, :conditions, :literals, :named_table_refs, :subquery_count
 
       def initialize(relation)
         @relation = relation
         @conditions = []
         @literals = {}
-        @subqueries = {}
+        @named_table_refs = { relation => self }
+        @subquery_count = 0
         relation.visit(self)
       end
 
       def table_ref=(table_ref)
         raise "A table ref has already been assigned" if @table_ref
         @table_ref = table_ref
-        @select_list = table_ref.select_list unless select_list
       end
 
       def add_condition(predicate)
@@ -27,8 +28,13 @@ module Keep
         end
       end
 
+      def add_named_table_ref(relation, table_ref)
+        named_table_refs[relation] = table_ref
+      end
+
       def add_subquery(relation)
-        subqueries[relation] = Subquery.new(relation, "t#{subqueries.size + 1}")
+        @subquery_count += 1
+        add_named_table_ref(relation, Subquery.new(self, relation, "t#{subquery_count}"))
       end
 
       def to_sql
@@ -36,7 +42,11 @@ module Keep
       end
 
       def select_clause_sql(query)
-        select_list.map {|s| s.to_sql(query) }.join(", ")
+        if select_list
+          select_list.map {|column| column.to_select_clause_sql(query)}.join(', ')
+        else
+          '*'
+        end
       end
 
       def where_clause_sql(query)

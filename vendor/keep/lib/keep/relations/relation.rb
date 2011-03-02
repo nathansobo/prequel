@@ -33,8 +33,8 @@ module Keep
         derive_column(column) if column
       end
 
-      def derive_column(column)
-        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column)
+      def derive_column(column, qualified=false)
+        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column, qualified)
       end
     end
   end

@@ -10,6 +10,10 @@ module Keep
         Equal.new(left.resolve_in_relations(*relations), right.resolve_in_relations(*relations))
       end
 
+      def resolve_in_query(query)
+        Equal.new(left.resolve_in_query(query), right.resolve_in_query(query))
+      end
+
       def to_sql(query)
         "#{left.to_sql(query)} = #{right.to_sql(query)}"
       end

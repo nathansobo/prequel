@@ -12,10 +12,6 @@ module Keep
         name
       end
 
-      def select_list
-        [Star.new(self)]
-      end
-
       def build_tuple(field_values)
         specific_field_values = {}
         field_values.each do |field_name, value|

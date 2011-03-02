@@ -1,11 +1,11 @@
 module Keep
   module Sql
     class Subquery < Query
-      attr_reader :relation, :name
+      attr_reader :parent, :relation, :name
       delegate :columns, :to => :relation
 
-      def initialize(relation, name)
-        @name = name
+      def initialize(parent, relation, name)
+        @parent, @name = parent, name
         super(relation)
       end
 
@@ -13,14 +13,7 @@ module Keep
         ['(', sql_string(query), ') as ', name].join
       end
 
-      # I suspect these methods need to delegate to the parent query.
-      def add_literal(literal)
-        raise NotImplementedError
-      end
-
-      def add_subquery(relation)
-        raise NotImplementedError
-      end
+      delegate :add_literal, :add_named_table_ref, :add_subquery, :named_table_refs, :to => :parent
     end
   end
 end

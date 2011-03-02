@@ -4,6 +4,10 @@ module Keep
       self
     end
 
+    def resolve_in_query(query)
+      query.add_literal(self)
+    end
+
     Object.send(:include, self)
   end
 
@@ -27,6 +31,10 @@ module Keep
           return column
         end
       end
+    end
+
+    def to_sql(query)
+      inspect
     end
 
     Symbol.send(:include, self)
