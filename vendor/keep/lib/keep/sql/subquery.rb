@@ -9,11 +9,23 @@ module Keep
         super(relation)
       end
 
+      delegate :add_literal, :add_singular_table_ref, :add_subquery, :singular_table_refs, :to => :parent
+
       def to_sql
         ['(', sql_string, ') as ', name].join
       end
 
-      delegate :add_literal, :add_singular_table_ref, :add_subquery, :singular_table_refs, :to => :parent
+      def build_tuple(field_values)
+        table_ref.build_tuple(unqualify(field_values))
+      end
+
+      protected
+
+      def unqualify(field_values)
+        Hash[field_values.map do |key, value|
+          [key.to_s.gsub(/^#{name}__/, "").to_sym, value]
+        end]
+      end
     end
   end
 end
