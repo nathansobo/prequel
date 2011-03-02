@@ -5,8 +5,8 @@ module Keep
       delegate :columns, :to => :relation
 
       def initialize(relation, name)
-        @relation, @name = relation, name
-        super()
+        @name = name
+        super(relation)
       end
 
       def to_sql(query)

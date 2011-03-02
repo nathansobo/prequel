@@ -4,9 +4,7 @@ module Keep
       delegate :to_sql, :rows, :all, :to => :query
 
       def query
-        Sql::Query.new.tap do |query|
-          visit(query)
-        end
+        Sql::Query.new(self)
       end
 
       def join(right, predicate)
