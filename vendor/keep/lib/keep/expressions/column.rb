@@ -14,22 +14,6 @@ module Keep
       def resolve_in_query(query)
         Sql::Column.new(query.named_table_refs[table], name)
       end
-
-      def as_qualified
-        Sql::QualifiedColumn.new(self)
-      end
-
-      def inspect
-        to_sql(nil)
-      end
-
-      def to_sql(query)
-        "#{table.name}.#{name}"
-      end
-
-      def qualified_name(query)
-        "#{table.name}__#{name}"
-      end
     end
   end
 end

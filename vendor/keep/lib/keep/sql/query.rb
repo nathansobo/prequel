@@ -38,26 +38,7 @@ module Keep
       end
 
       def to_sql
-        [sql_string(self), literals]
-      end
-
-      def select_clause_sql(query)
-        if select_list
-          select_list.map {|column| column.to_select_clause_sql(query)}.join(', ')
-        else
-          '*'
-        end
-      end
-
-      def where_clause_sql(query)
-        return nil if conditions.empty?
-        'where ' + conditions.map do |condition|
-          condition.to_sql(query)
-        end.join(' and ')
-      end
-
-      def from_clause_sql(query)
-        table_ref.to_sql(query)
+        [sql_string, literals]
       end
 
       def rows
@@ -72,13 +53,32 @@ module Keep
 
       protected
 
-      def sql_string(query)
+      def sql_string
         ["select",
-          select_clause_sql(query),
+          select_clause_sql,
           "from",
-          from_clause_sql(query),
-          where_clause_sql(query)
+          from_clause_sql,
+          where_clause_sql,
         ].compact.join(" ")
+      end
+
+      def select_clause_sql
+        if select_list
+          select_list.map {|column| column.to_select_clause_sql}.join(', ')
+        else
+          '*'
+        end
+      end
+
+      def from_clause_sql
+        table_ref.to_sql
+      end
+
+      def where_clause_sql
+        return nil if conditions.empty?
+        'where ' + conditions.map do |condition|
+          condition.to_sql
+        end.join(' and ')
       end
     end
   end

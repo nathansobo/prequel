@@ -33,18 +33,10 @@ module Keep
       end
     end
 
-    def to_sql(query)
+    def to_sql
       inspect
     end
 
     Symbol.send(:include, self)
-  end
-
-  module NumericExtensions
-    def to_sql(query)
-      query.add_literal(self).inspect
-    end
-
-    Numeric.send(:include, self)
   end
 end

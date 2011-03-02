@@ -9,8 +9,8 @@ module Keep
         super(relation)
       end
 
-      def to_sql(query)
-        ['(', sql_string(query), ') as ', name].join
+      def to_sql
+        ['(', sql_string, ') as ', name].join
       end
 
       delegate :add_literal, :add_named_table_ref, :add_subquery, :named_table_refs, :to => :parent

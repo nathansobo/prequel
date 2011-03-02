@@ -6,12 +6,12 @@ module Keep
         @left, @right, @predicate = left, right, predicate
       end
 
-      def to_sql(query)
-        [left.to_sql(query),
+      def to_sql
+        [left.to_sql,
          'inner join',
-         right.to_sql(query),
+         right.to_sql,
          'on',
-         predicate.to_sql(query)
+         predicate.to_sql
         ].join(' ')
       end
 

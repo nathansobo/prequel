@@ -7,12 +7,12 @@ module Keep
         @subquery, @name, @ancestor = subquery, name, ancestor
       end
 
-      def to_sql(query)
+      def to_sql
         "#{subquery.name}.#{name}"
       end
 
-      def to_select_clause_sql(query)
-        "#{ancestor.to_sql(query)} as #{name}"
+      def to_select_clause_sql
+        "#{ancestor.to_sql} as #{name}"
       end
 
       def qualified_name

@@ -14,8 +14,8 @@ module Keep
         Equal.new(left.resolve_in_query(query), right.resolve_in_query(query))
       end
 
-      def to_sql(query)
-        "#{left.to_sql(query)} = #{right.to_sql(query)}"
+      def to_sql
+        "#{left.to_sql} = #{right.to_sql}"
       end
     end
   end

@@ -6,12 +6,12 @@ module Keep
         @table_ref, @name = table_ref, name
       end
 
-      def to_sql(query)
+      def to_sql
         "#{table_ref.name}.#{name}"
       end
 
-      def to_select_clause_sql(query)
-        to_sql(query)
+      def to_select_clause_sql
+        to_sql
       end
 
       def qualified_name

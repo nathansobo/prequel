@@ -8,7 +8,7 @@ module Keep
         @relation = relation
       end
 
-      def to_sql(query)
+      def to_sql
         name
       end
 

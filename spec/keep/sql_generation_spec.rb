@@ -66,6 +66,8 @@ module Keep
     end
     
     specify "left-associative inner joins with more than two tables" do
+
+      blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).join(comments, posts[:id] => :post_id)
       blogs.where(:user_id => 1).join(posts, blogs[:id] => :blog_id).join(comments, posts[:id] => :post_id).to_sql.should be_like_query(%{
         select
           t1.id as t1__id,

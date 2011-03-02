@@ -17,12 +17,6 @@ module Keep
           ancestor.resolve_in_query(query)
         end
       end
-
-      protected
-
-      def subquery_name(query)
-        query.subqueries[relation].try(:name)
-      end
     end
   end
 end
