@@ -5,7 +5,7 @@ module Keep
 
       def initialize(operand, predicate)
         @operand = operand
-        @predicate = predicate.to_predicate.resolve_columns(operand)
+        @predicate = predicate.to_predicate.resolve_in_relations(operand)
       end
 
       def get_column(name)
@@ -19,8 +19,8 @@ module Keep
       end
 
       def visit(query)
-        query.add_condition(predicate)
         operand.visit(query)
+        query.add_condition(predicate)
       end
     end
   end

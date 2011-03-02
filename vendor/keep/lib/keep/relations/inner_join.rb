@@ -5,7 +5,7 @@ module Keep
 
       def initialize(left_operand, right_operand, predicate)
         @left, @right = left_operand.to_relation, right_operand.to_relation
-        @predicate = predicate.to_predicate.resolve_columns(left, right)
+        @predicate = predicate.to_predicate.resolve_in_relations(left, right)
       end
 
       def get_column(name)
