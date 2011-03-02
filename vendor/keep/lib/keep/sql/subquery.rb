@@ -16,12 +16,12 @@ module Keep
       end
 
       def build_tuple(field_values)
-        table_ref.build_tuple(unqualify(field_values))
+        table_ref.build_tuple(unqualify_field_values(field_values))
       end
 
       protected
 
-      def unqualify(field_values)
+      def unqualify_field_values(field_values)
         Hash[field_values.map do |key, value|
           [key.to_s.gsub(/^#{name}__/, "").to_sym, value]
         end]
