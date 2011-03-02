@@ -16,10 +16,10 @@ module Keep
       end
 
       def table_ref(query)
-        single_table_ref(query)
+        singular_table_ref(query)
       end
 
-      def single_table_ref(query)
+      def singular_table_ref(query)
         query.add_subquery(self)
       end
 

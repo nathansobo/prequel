@@ -28,7 +28,7 @@ module Keep
       end
 
       def table_ref(query)
-        Sql::InnerJoinedTableRef.new(left.table_ref(query), right.single_table_ref(query), predicate.resolve_in_query(query))
+        Sql::InnerJoinedTableRef.new(left.table_ref(query), right.singular_table_ref(query), predicate.resolve_in_query(query))
       end
     end
   end

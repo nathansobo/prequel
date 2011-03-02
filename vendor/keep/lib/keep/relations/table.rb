@@ -32,7 +32,7 @@ module Keep
         query.table_ref = table_ref(query)
       end
 
-      def single_table_ref(query)
+      def singular_table_ref(query)
         query.add_singular_table_ref(self, Sql::TableRef.new(self))
       end
 
