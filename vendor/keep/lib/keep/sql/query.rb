@@ -66,9 +66,9 @@ module Keep
 
       def resolve_derived_column(column, qualified=false)
         query_columns[column] ||= begin
-          resolved_ancestor = column.ancestor.resolve_in_query(self)
-          resolved_name = qualified ? resolved_ancestor.qualified_name : column.name
-          Sql::DerivedQueryColumn.new(self, resolved_name, resolved_ancestor)
+          resolved_expression = column.expression.resolve_in_query(self)
+          resolved_name = qualified ? resolved_expression.qualified_name : column.name
+          Sql::DerivedQueryColumn.new(self, resolved_name, resolved_expression)
         end
       end
 

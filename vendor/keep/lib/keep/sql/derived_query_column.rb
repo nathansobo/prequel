@@ -1,10 +1,10 @@
 module Keep
   module Sql
     class DerivedQueryColumn
-      attr_reader :subquery, :name, :ancestor
+      attr_reader :subquery, :name, :expression
 
-      def initialize(subquery, name, ancestor)
-        @subquery, @name, @ancestor = subquery, name, ancestor
+      def initialize(subquery, name, expression)
+        @subquery, @name, @expression = subquery, name, expression
       end
 
       def to_sql
@@ -12,7 +12,7 @@ module Keep
       end
 
       def to_select_clause_sql
-        "#{ancestor.to_sql} as #{name}"
+        "#{expression.to_sql} as #{name}"
       end
 
       def qualified_name

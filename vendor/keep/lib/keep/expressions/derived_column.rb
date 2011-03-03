@@ -1,22 +1,22 @@
 module Keep
   module Expressions
     class DerivedColumn
-      attr_reader :relation, :ancestor, :alias_name
-      delegate :origin, :to => :ancestor
+      attr_reader :relation, :expression, :alias_name
+      delegate :origin, :to => :expression
 
-      def initialize(relation, ancestor, alias_name)
-        @relation, @ancestor, @alias_name = relation, ancestor, alias_name
+      def initialize(relation, expression, alias_name)
+        @relation, @expression, @alias_name = relation, expression, alias_name
       end
 
       def name
-        alias_name || ancestor.name
+        alias_name || expression.name
       end
 
       def resolve_in_query(query)
         if subquery = query.singular_table_refs[relation]
           subquery.resolve_derived_column(self)
         else
-          ancestor.resolve_in_query(query)
+          expression.resolve_in_query(query)
         end
       end
     end
