@@ -24,6 +24,10 @@ module Keep
         columns_by_name[column_name]
       end
 
+      def get_table(table_name)
+        self if name == table_name
+      end
+
       def columns
         columns_by_name.values
       end

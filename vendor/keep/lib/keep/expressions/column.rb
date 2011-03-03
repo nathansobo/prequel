@@ -11,6 +11,14 @@ module Keep
         Equal.new(self, other)
       end
 
+      def qualified_name
+        "#{table.name}__#{name}".to_sym
+      end
+
+      def origin
+        self
+      end
+
       def resolve_in_query(query)
         query.singular_table_refs[table].resolve_column(self)
       end

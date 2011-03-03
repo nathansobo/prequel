@@ -12,6 +12,10 @@ module Keep
         derive_column_from(left, name) || derive_column_from(right, name)
       end
 
+      def get_table(name)
+        left.get_table(name) || right.get_table(name)
+      end
+
       def columns
         (left.columns + right.columns).map do |column|
           derive_column(column)

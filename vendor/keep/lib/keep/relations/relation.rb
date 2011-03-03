@@ -15,6 +15,10 @@ module Keep
         Selection.new(self, predicate)
       end
 
+      def project(*symbols)
+        Projection.new(self, *symbols)
+      end
+
       def table_ref(query)
         singular_table_ref(query)
       end
@@ -32,13 +36,13 @@ module Keep
         @derive_columns ||= {}
       end
 
-      def derive_column_from(operand, name)
+      def derive_column_from(operand, name, alias_name=nil)
         column = operand.get_column(name)
-        derive_column(column) if column
+        derive_column(column, alias_name) if column
       end
 
-      def derive_column(column)
-        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column)
+      def derive_column(column, alias_name=nil)
+        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column, alias_name)
       end
     end
   end

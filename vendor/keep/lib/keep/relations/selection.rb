@@ -12,6 +12,8 @@ module Keep
         derive_column_from(operand, name)
       end
 
+      delegate :get_table, :to => :operand
+
       def columns
         operand.columns.map do |column|
           derive_column(column)
