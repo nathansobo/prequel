@@ -75,7 +75,16 @@ module Keep
 
         context "when projecting individual columns" do
           it "returns instances of the projection's custom tuple class, with accessors for the particular fields" do
+            DB[:blogs] << { :id => 1, :user_id => 1, :title => "Blog 1"}
+            DB[:posts] << { :id => 1, :blog_id => 1, :title => "Blog 1, Post 1"}
 
+            projection = Blog.join(Post, Blog[:id] => :blog_id).project(Blog[:title].as(:blog_title), Post[:title].as(:post_title))
+
+            results = projection.all
+            results.size.should == 1
+            results.first.should be_an_instance_of(projection.tuple_class)
+            results.first.blog_title.should == "Blog 1"
+            results.first.post_title.should == "Blog 1, Post 1"
           end
         end
       end
