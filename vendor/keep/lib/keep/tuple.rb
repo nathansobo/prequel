@@ -17,9 +17,7 @@ module Keep
       soft_update_fields(values)
     end
 
-    def columns
-      self.class.columns
-    end
+    delegate :columns, :to => :relation
 
     def soft_update_fields(values)
       values.each do |name, value|
