@@ -209,6 +209,29 @@ module Keep
             }, :v1 => 1)
           end
         end
+
+        describe "an inner-join containing a projection within a subquery" do
+          it "generates sql with the selection predicate correctly refering to columns from the join" do
+            posts_comments = Post.join(Comment, Post[:id] => :post_id)
+            Blog.join(posts_comments.project(Post), Blog[:id] => :blog_id).where(Post[:title] => "Post Title").to_sql.should be_like_query(%{
+              select blogs.id      as blogs__id,
+                     blogs.user_id as blogs__user_id,
+                     blogs.title   as blogs__title,
+                     t1.id         as t1__id,
+                     t1.blog_id    as t1__blog_id,
+                     t1.title      as t1__title
+              from   blogs
+                     inner join (select posts.id      as id,
+                                        posts.blog_id as blog_id,
+                                        posts.title   as title
+                                 from   posts
+                                        inner join comments
+                                          on posts.id = comments.post_id) as t1
+                       on blogs.id = t1.blog_id
+              where  t1.title = :v1
+            }, :v1 => "Post Title")
+          end
+        end
       end
     end
   end

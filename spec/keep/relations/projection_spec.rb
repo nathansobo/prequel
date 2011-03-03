@@ -40,6 +40,16 @@ module Keep
         end
       end
 
+      describe "#get_column" do
+        it "returns a derived column on the projection by name or qualified name" do
+          projection = Blog.join(Post, Blog[:id] => :blog_id).project(Post)
+
+          derived_column = projection.get_column(:id)
+          derived_column.origin.should == Post.get_column(:id)
+          projection.get_column(Post[:id]).should == derived_column
+        end
+      end
+
       describe "#to_sql" do
         describe "a projection on top of a simple inner join" do
           it "generates the appropriate sql" do

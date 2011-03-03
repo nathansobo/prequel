@@ -9,6 +9,14 @@ module Keep
         assign_derived_columns(symbols)
       end
 
+      def get_column(name)
+        if name.to_s.include?("__")
+          derive_column_from(operand, name)
+        else
+          derived_columns_by_name[name]
+        end
+      end
+
       def columns
         derived_columns.values
       end
@@ -21,15 +29,17 @@ module Keep
       end
 
       protected
+      attr_reader :derived_columns_by_name
 
       def assign_derived_columns(symbols)
-        table_name = symbols.first
+        @derived_columns_by_name = {}
+        table_name = symbols.first.to_sym
         table = operand.get_table(table_name)
 
         table.columns.map do |column|
           unqualified_name = column.name
           qualified_name = column.qualified_name
-          derive_column_from(operand, qualified_name, unqualified_name)
+          derived_columns_by_name[unqualified_name] = derive_column_from(operand, qualified_name, unqualified_name)
         end
       end
     end

@@ -2,6 +2,8 @@ module Keep
   module Relations
     class Table < Relation
       attr_reader :name, :columns_by_name, :tuple_class
+      alias_method :to_sym, :name
+
       def initialize(name, tuple_class=nil, &block)
         @name, @tuple_class = name, tuple_class
         @columns_by_name = {}
