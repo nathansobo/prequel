@@ -50,6 +50,30 @@ module Keep
         end
       end
 
+      describe "#all" do
+        before do
+          Blog.create_table
+          Post.create_table
+        end
+
+        context "when projecting a table" do
+          it "returns instances of that table's tuple class" do
+            DB[:blogs] << { :id => 1, :user_id => 1, :title => "Blog 1"}
+            DB[:blogs] << { :id => 2, :user_id => 2, :title => "Blog 2"}
+            DB[:posts] << { :id => 1, :blog_id => 1, :title => "Blog 1, Post 1"}
+            DB[:posts] << { :id => 2, :blog_id => 1, :title => "Blog 1, Post 2"}
+            DB[:posts] << { :id => 3, :blog_id => 2, :title => "Blog 2, Post 1"}
+
+            projection = Blog.where(:user_id => 1).join(Post, Blog[:id] => :blog_id).project(Post)
+
+            results = projection.all
+            results.size.should == 2
+            results[0].should == Post.find(1)
+            results[1].should == Post.find(2)
+          end
+        end
+      end
+
       describe "#to_sql" do
         describe "a projection on top of a simple inner join" do
           it "generates the appropriate sql" do

@@ -10,5 +10,6 @@ RSpec.configure do |config|
     Keep::Record.subclasses.each do |subclass|
       subclass.remove_class
     end
+    Keep.clear_session
   end
 end

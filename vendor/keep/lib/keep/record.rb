@@ -3,7 +3,7 @@ module Keep
     class_attribute :relation
 
     class << self
-      delegate :all, :result_set, :[], :get_column, :columns, :delete, :where, :join, :to_sym, :to => :relation
+      delegate :all, :result_set, :[], :to_sql, :get_column, :columns, :first, :find, :where, :join, :to_sym, :to => :relation
 
       def table
         relation
@@ -30,6 +30,10 @@ module Keep
       def column(name, type)
         relation.def_column(name, type)
         def_field_accessor(name)
+      end
+
+      def new(field_values={})
+        Keep.session[table.name][field_values[:id]] ||= super
       end
     end
 

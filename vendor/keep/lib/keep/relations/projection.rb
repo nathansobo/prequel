@@ -26,17 +26,18 @@ module Keep
         query.select_list = columns.map do |derived_column|
           query.resolve_derived_column(derived_column)
         end
+        query.tuple_builder = query.singular_table_refs[projected_table]
       end
 
       protected
-      attr_reader :derived_columns_by_name
+      attr_reader :derived_columns_by_name, :projected_table
 
       def assign_derived_columns(symbols)
         @derived_columns_by_name = {}
         table_name = symbols.first.to_sym
-        table = operand.get_table(table_name)
+        @projected_table = operand.get_table(table_name)
 
-        table.columns.map do |column|
+        projected_table.columns.map do |column|
           unqualified_name = column.name
           qualified_name = column.qualified_name
           derived_columns_by_name[unqualified_name] = derive_column_from(operand, qualified_name, unqualified_name)

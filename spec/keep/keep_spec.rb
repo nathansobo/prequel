@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe Keep do
   describe "when the DB constant is referenced for the first time" do
     it "assigns it to Sequel::DATABASES.first" do

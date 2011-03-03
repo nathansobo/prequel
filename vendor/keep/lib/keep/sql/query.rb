@@ -3,6 +3,7 @@ module Keep
     class Query
       attr_accessor :select_list
       attr_reader :relation, :table_ref, :conditions, :literals, :singular_table_refs, :subquery_count, :query_columns
+      attr_writer :tuple_builder
 
       def initialize(relation)
         @relation = relation
@@ -15,8 +16,13 @@ module Keep
 
       def all
         result_set.map do |field_values|
-          table_ref.build_tuple(field_values)
+          tuple_builder.build_tuple(field_values)
         end
+      end
+
+      def first
+        r = result_set
+        r.empty?? nil : tuple_builder.build_tuple(r.first)
       end
 
       def result_set
@@ -64,6 +70,10 @@ module Keep
           resolved_name = qualified ? resolved_ancestor.qualified_name : column.name
           Sql::DerivedQueryColumn.new(self, resolved_name, resolved_ancestor)
         end
+      end
+
+      def tuple_builder
+        @tuple_builder || table_ref
       end
 
       protected

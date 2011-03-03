@@ -1,18 +1,22 @@
 module Keep
   module Relations
     class Relation
-      delegate :to_sql, :result_set, :all, :to => :query
+      delegate :to_sql, :result_set, :all, :first, :to => :query
 
       def query
         Sql::Query.new(self).build
       end
 
-      def join(right, predicate)
-        InnerJoin.new(self, right, predicate)
+      def find(id)
+        where(:id => id).first
       end
 
       def where(predicate)
         Selection.new(self, predicate)
+      end
+
+      def join(right, predicate)
+        InnerJoin.new(self, right, predicate)
       end
 
       def project(*symbols)
