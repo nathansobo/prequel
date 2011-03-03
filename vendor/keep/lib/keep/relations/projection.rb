@@ -46,7 +46,6 @@ module Keep
         end
       end
 
-
       protected
       attr_reader :projected_table
 

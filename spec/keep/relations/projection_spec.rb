@@ -54,6 +54,7 @@ module Keep
         before do
           Blog.create_table
           Post.create_table
+          Comment.create_table
         end
 
         context "when projecting a table" do
@@ -85,6 +86,26 @@ module Keep
             results.first.should be_an_instance_of(projection.tuple_class)
             results.first.blog_title.should == "Blog 1"
             results.first.post_title.should == "Blog 1, Post 1"
+          end
+        end
+
+        context "when the projection is embedded in a join" do
+
+          it "constructs the appropriate composite tuples" do
+            DB[:blogs] << { :id => 1, :user_id => 1, :title => "Blog 1"}
+            DB[:posts] << { :id => 1, :blog_id => 1, :title => "Blog 1, Post 1"}
+            DB[:comments] << { :id => 1, :post_id => 1, :body => "Blog 1, Post 1, Comment 1"}
+
+            comments_projection = Comment.project(:post_id.as(:post_id_of_comment), :body.as(:comment_body))
+            rel = Blog.join(Post.join(comments_projection, Post[:id] => :post_id_of_comment), Blog[:id] => :blog_id)
+
+            results = rel.all
+
+            results.size.should == 1
+            results.first[:blogs].should == Blog.find(1)
+            results.first[:posts].should == Post.find(1)
+            results.first[:post_id_of_comment].should == Comment.find(1).post_id
+            results.first[:comment_body].should == Comment.find(1).body
           end
         end
       end
@@ -135,6 +156,36 @@ module Keep
                                  from   posts
                                         inner join comments
                                           on posts.id = comments.post_id) as t1
+                       on blogs.id = t1.posts__blog_id
+            })
+          end
+        end
+
+        describe "a projection embedded inside of a join" do
+          it "generates the appropriate sql" do
+            comments_projection = Comment.project(:post_id.as(:post_id_of_comment), :body.as(:comment_body))
+            rel = Blog.join(Post.join(comments_projection, Post[:id] => :post_id_of_comment), Blog[:id] => :blog_id)
+            rel.to_sql.should be_like_query(%{
+              select blogs.id                  as blogs__id,
+                     blogs.user_id             as blogs__user_id,
+                     blogs.title               as blogs__title,
+                     t1.posts__id              as t1__posts__id,
+                     t1.posts__blog_id         as t1__posts__blog_id,
+                     t1.posts__title           as t1__posts__title,
+                     t1.t2__post_id_of_comment as t1__t2__post_id_of_comment,
+                     t1.t2__comment_body       as t1__t2__comment_body
+              from   blogs
+                     inner join (select posts.id              as posts__id,
+                                        posts.blog_id         as posts__blog_id,
+                                        posts.title           as posts__title,
+                                        t2.post_id_of_comment as t2__post_id_of_comment,
+                                        t2.comment_body       as t2__comment_body
+                                 from   posts
+                                        inner join (select comments.post_id as
+                                                           post_id_of_comment,
+                                                           comments.body    as comment_body
+                                                    from   comments) as t2
+                                          on posts.id = t2.post_id_of_comment) as t1
                        on blogs.id = t1.posts__blog_id
             })
           end

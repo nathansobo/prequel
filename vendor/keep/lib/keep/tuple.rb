@@ -26,7 +26,7 @@ module Keep
     end
 
     def get_field_value(name)
-      fields_by_name[name].value
+      fields_by_name[name].try(:value)
     end
 
     def field_values
@@ -34,6 +34,10 @@ module Keep
         h[name] = field.value
         h
       end
+    end
+
+    def get_tuple(name)
+      nil
     end
 
     delegate :inspect, :to => :field_values
@@ -49,7 +53,11 @@ module Keep
     end
 
     def set_field_value(name, value)
-      fields_by_name[name].value = value
+      field = fields_by_name[name]
+      unless field
+        raise "No field found #{name.inspect}"
+      end
+      field.value = value
     end
   end
 end

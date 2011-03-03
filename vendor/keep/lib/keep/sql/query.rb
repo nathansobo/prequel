@@ -59,7 +59,7 @@ module Keep
 
       def add_subquery(relation)
         @subquery_count += 1
-        subquery = Subquery.new(self, relation, "t#{subquery_count}")
+        subquery = Subquery.new(self, relation, "t#{subquery_count}".to_sym)
         add_singular_table_ref(relation, subquery)
         subquery.build
       end

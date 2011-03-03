@@ -1,6 +1,8 @@
 module Keep
   module Sql
     class Subquery < Query
+      include NamedTableRef
+
       attr_reader :parent, :relation, :name
       delegate :columns, :to => :relation
 
@@ -16,15 +18,7 @@ module Keep
       end
 
       def build_tuple(field_values)
-        table_ref.build_tuple(unqualify_field_values(field_values))
-      end
-
-      protected
-
-      def unqualify_field_values(field_values)
-        Hash[field_values.map do |key, value|
-          [key.to_s.gsub(/^#{name}__/, "").to_sym, value]
-        end]
+        tuple_builder.build_tuple(extract_field_values(field_values))
       end
     end
   end
