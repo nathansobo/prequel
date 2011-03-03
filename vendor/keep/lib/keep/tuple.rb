@@ -36,7 +36,7 @@ module Keep
       end
     end
 
-    def get_tuple(name)
+    def get_record(name)
       nil
     end
 

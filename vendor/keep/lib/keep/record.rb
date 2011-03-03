@@ -43,7 +43,7 @@ module Keep
 
     public :set_field_value
 
-    def get_tuple(table_name)
+    def get_record(table_name)
       self if table_name == table.name
     end
   end
