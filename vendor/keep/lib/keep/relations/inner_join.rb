@@ -5,11 +5,7 @@ module Keep
 
       def initialize(left_operand, right_operand, predicate)
         @left, @right = left_operand.to_relation, right_operand.to_relation
-        @predicate = predicate.to_predicate.resolve_in_relations(left, right)
-      end
-
-      def get_column(name)
-        derive_column_from(left, name) || derive_column_from(right, name)
+        @predicate = resolve(predicate.to_predicate)
       end
 
       def get_table(name)
@@ -18,7 +14,7 @@ module Keep
 
       def columns
         (left.columns + right.columns).map do |column|
-          derive_column(column)
+          derive(column)
         end
       end
 
@@ -31,6 +27,12 @@ module Keep
 
       def table_ref(query)
         Sql::InnerJoinedTableRef.new(left.table_ref(query), right.singular_table_ref(query), predicate.resolve_in_query(query))
+      end
+
+      protected
+
+      def operands
+        [left, right]
       end
     end
   end

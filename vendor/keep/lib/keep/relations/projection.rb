@@ -5,13 +5,12 @@ module Keep
 
       def initialize(operand, *symbols)
         @operand = operand
-        raise NotImplementedError unless symbols.size == 1
         assign_derived_columns(symbols)
       end
 
       def get_column(name)
         if name.to_s.include?("__")
-          derive_column_from(operand, name)
+          super
         else
           derived_columns_by_name[name]
         end
@@ -30,18 +29,40 @@ module Keep
       end
 
       protected
-      attr_reader :derived_columns_by_name, :projected_table
+      attr_reader :projected_table
 
-      def assign_derived_columns(symbols)
-        @derived_columns_by_name = {}
-        table_name = symbols.first.to_sym
-        @projected_table = operand.get_table(table_name)
+      def assign_derived_columns(expressions)
 
-        projected_table.columns.map do |column|
-          unqualified_name = column.name
-          qualified_name = column.qualified_name
-          derived_columns_by_name[unqualified_name] = derive_column_from(operand, qualified_name, unqualified_name)
+        if @projected_table = detect_projected_table(expressions)
+          projected_table.columns.map do |column|
+            derive(resolve(column.qualified_name.as(column.name)))
+          end
+        else
+          expressions.each do |column_name|
+            derive(resolve(column_name))
+          end
         end
+      end
+
+      def detect_projected_table(args)
+        return false unless args.size == 1
+        arg = args.first
+        if arg.instance_of?(Table)
+          table_name = arg.name
+        elsif arg.instance_of?(Class) && arg.respond_to?(:table)
+          table_name = arg.table.name
+        elsif arg.instance_of?(Symbol)
+          return false if arg =~ /__/
+          table_name = arg
+        else
+          return false
+        end
+
+        operand.get_table(table_name)
+      end
+
+      def operands
+        [operand]
       end
     end
   end

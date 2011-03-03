@@ -6,8 +6,8 @@ module Keep
         @left, @right = left, right
       end
       
-      def resolve_in_relations(*relations)
-        Equal.new(left.resolve_in_relations(*relations), right.resolve_in_relations(*relations))
+      def resolve_in_relations(relations)
+        Equal.new(left.resolve_in_relations(relations), right.resolve_in_relations(relations))
       end
 
       def resolve_in_query(query)

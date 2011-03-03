@@ -7,12 +7,20 @@ module Keep
         @table, @name, @type = table, name, type
       end
 
+      def alias_name
+        nil
+      end
+
       def eq(other)
         Equal.new(self, other)
       end
 
       def qualified_name
         "#{table.name}__#{name}".to_sym
+      end
+
+      def expression
+        self
       end
 
       def origin

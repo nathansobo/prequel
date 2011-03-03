@@ -72,10 +72,32 @@ module Keep
             results[1].should == Post.find(2)
           end
         end
+
+        context "when projecting individual columns" do
+          it "returns instances of the projection's custom tuple class, with accessors for the particular fields" do
+
+          end
+        end
       end
 
       describe "#to_sql" do
-        describe "a projection on top of a simple inner join" do
+        describe "a projection of particular columns, some with aliases" do
+          it "generates the appropriate sql" do
+            Blog.project(:user_id, :title.as(:name)).to_sql.should be_like_query(%{
+              select blogs.user_id as user_id, blogs.title as name from blogs
+            })
+          end
+        end
+
+        describe "a projection of a set function" do
+          it "generates the appropriate sql" do
+            Blog.project(:id.count.as(:blog_count)).to_sql.should be_like_query(%{
+              select count(blogs.id) as blog_count from blogs
+            })
+          end
+        end
+
+        describe "a projection of all columns in a table on top of a simple inner join" do
           it "generates the appropriate sql" do
             Blog.join(Post, Blog[:id] => :blog_id).project(:posts).to_sql.should be_like_query(%{
               select posts.id      as id,
@@ -88,7 +110,7 @@ module Keep
           end
         end
 
-        describe "a projection on top of a right-associative 3-table join, projecting columns from the subquery" do
+        describe "a projection of all columns in a table on top of a right-associative 3-table join, projecting columns from the subquery" do
           it "generates the appropriate sql, aliasing columns from subqueries back to their natural names" do
             Blog.join(Post.join(Comment, Post[:id] => :post_id), Blog[:id] => :blog_id).project(:comments).to_sql.should be_like_query(%{
               select t1.comments__id      as id,

@@ -5,24 +5,26 @@ module Keep
 
       def initialize(operand, predicate)
         @operand = operand
-        @predicate = predicate.to_predicate.resolve_in_relations(operand)
-      end
-
-      def get_column(name)
-        derive_column_from(operand, name)
+        @predicate = resolve(predicate.to_predicate)
       end
 
       delegate :get_table, :to => :operand
 
       def columns
         operand.columns.map do |column|
-          derive_column(column)
+          derive(column)
         end
       end
 
       def visit(query)
         operand.visit(query)
         query.add_condition(predicate.resolve_in_query(query))
+      end
+
+      protected
+
+      def operands
+        [operand]
       end
     end
   end

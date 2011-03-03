@@ -35,18 +35,36 @@ module Keep
         self
       end
 
+      def get_column(name)
+        resolved = resolve(name)
+        derive(resolved) if resolved
+      end
+
       protected
+
+      def resolve(expression)
+        expression.resolve_in_relations(operands)
+      end
+
+      def derive(resolved_expression)
+        if resolved_expression.instance_of?(Expressions::AliasedExpression)
+          alias_name = resolved_expression.alias_name
+          resolved_expression = resolved_expression.expression
+        end
+
+          derived_columns[resolved_expression] ||=
+          Expressions::DerivedColumn.new(self, resolved_expression, alias_name).tap do |derived_column|
+            derived_columns[resolved_expression] = derived_column
+            derived_columns_by_name[derived_column.name] = derived_column
+          end
+      end
+
       def derived_columns
-        @derive_columns ||= {}
+        @derived_columns ||= {}
       end
 
-      def derive_column_from(operand, name, alias_name=nil)
-        column = operand.get_column(name)
-        derive_column(column, alias_name) if column
-      end
-
-      def derive_column(column, alias_name=nil)
-        derived_columns[column] ||= Expressions::DerivedColumn.new(self, column, alias_name)
+      def derived_columns_by_name
+        @derived_columns_by_name ||= {}
       end
     end
   end
