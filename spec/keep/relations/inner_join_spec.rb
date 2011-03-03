@@ -57,29 +57,17 @@ module Keep
             blogs_posts_comments = relation.all
             blogs_posts_comments.size.should == 3
 
-            blogs_posts_comments[0][:blogs].should be_a(Blog)
-            blogs_posts_comments[0][:blogs].user_id.should == 1
-            blogs_posts_comments[0][:blogs].title.should == "Blog 1"
-            blogs_posts_comments[0][:posts].should be_a(Post)
-            blogs_posts_comments[0][:posts].title.should == "Blog 1, Post 1"
-            blogs_posts_comments[0][:comments].should be_a(Comment)
-            blogs_posts_comments[0][:comments].body == "Post 1 comment."
+            blogs_posts_comments[0][:blogs].should == Blog.find(1)
+            blogs_posts_comments[0][:posts].should == Post.find(1)
+            blogs_posts_comments[0][:comments].should == Comment.find(1)
 
-            blogs_posts_comments[1][:blogs].should be_a(Blog)
-            blogs_posts_comments[1][:blogs].user_id.should == 1
-            blogs_posts_comments[1][:blogs].title.should == "Blog 1"
-            blogs_posts_comments[1][:posts].should be_a(Post)
-            blogs_posts_comments[1][:posts].title.should == "Blog 1, Post 2"
-            blogs_posts_comments[1][:comments].should be_a(Comment)
-            blogs_posts_comments[1][:comments].body == "Post 2 comment."
+            blogs_posts_comments[1][:blogs].should == Blog.find(1)
+            blogs_posts_comments[1][:posts].should == Post.find(2)
+            blogs_posts_comments[1][:comments].should == Comment.find(2)
 
-            blogs_posts_comments[2][:blogs].should be_a(Blog)
-            blogs_posts_comments[2][:blogs].user_id.should == 2
-            blogs_posts_comments[2][:blogs].title.should == "Blog 2"
-            blogs_posts_comments[2][:posts].should be_a(Post)
-            blogs_posts_comments[2][:posts].title.should == "Blog 2, Post 1"
-            blogs_posts_comments[2][:comments].should be_a(Comment)
-            blogs_posts_comments[2][:comments].body == "Post 3 comment."
+            blogs_posts_comments[2][:blogs].should == Blog.find(2)
+            blogs_posts_comments[2][:posts].should == Post.find(3)
+            blogs_posts_comments[2][:comments].should == Comment.find(3)
           end
         end
 
@@ -89,29 +77,17 @@ module Keep
             blogs_posts_comments = relation.all
             blogs_posts_comments.size.should == 3
 
-            blogs_posts_comments[0][:blogs].should be_a(Blog)
-            blogs_posts_comments[0][:blogs].user_id.should == 1
-            blogs_posts_comments[0][:blogs].title.should == "Blog 1"
-            blogs_posts_comments[0][:posts].should be_a(Post)
-            blogs_posts_comments[0][:posts].title.should == "Blog 1, Post 1"
-            blogs_posts_comments[0][:comments].should be_a(Comment)
-            blogs_posts_comments[0][:comments].body == "Post 1 comment."
+            blogs_posts_comments[0][:blogs].should == Blog.find(1)
+            blogs_posts_comments[0][:posts].should == Post.find(1)
+            blogs_posts_comments[0][:comments].should == Comment.find(1)
 
-            blogs_posts_comments[1][:blogs].should be_a(Blog)
-            blogs_posts_comments[1][:blogs].user_id.should == 1
-            blogs_posts_comments[1][:blogs].title.should == "Blog 1"
-            blogs_posts_comments[1][:posts].should be_a(Post)
-            blogs_posts_comments[1][:posts].title.should == "Blog 1, Post 2"
-            blogs_posts_comments[1][:comments].should be_a(Comment)
-            blogs_posts_comments[1][:comments].body == "Post 2 comment."
+            blogs_posts_comments[1][:blogs].should == Blog.find(1)
+            blogs_posts_comments[1][:posts].should == Post.find(2)
+            blogs_posts_comments[1][:comments].should == Comment.find(2)
 
-            blogs_posts_comments[2][:blogs].should be_a(Blog)
-            blogs_posts_comments[2][:blogs].user_id.should == 2
-            blogs_posts_comments[2][:blogs].title.should == "Blog 2"
-            blogs_posts_comments[2][:posts].should be_a(Post)
-            blogs_posts_comments[2][:posts].title.should == "Blog 2, Post 1"
-            blogs_posts_comments[2][:comments].should be_a(Comment)
-            blogs_posts_comments[2][:comments].body == "Post 3 comment."
+            blogs_posts_comments[2][:blogs].should == Blog.find(2)
+            blogs_posts_comments[2][:posts].should == Post.find(3)
+            blogs_posts_comments[2][:comments].should == Comment.find(3)
           end
         end
       end
