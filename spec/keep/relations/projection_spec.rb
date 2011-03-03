@@ -39,6 +39,42 @@ module Keep
           end
         end
       end
+
+      describe "#to_sql" do
+        describe "a projection on top of a simple inner join" do
+          it "generates the appropriate sql" do
+            Blog.join(Post, Blog[:id] => :blog_id).project(:posts).to_sql.should be_like_query(%{
+              select posts.id      as id,
+                     posts.blog_id as blog_id,
+                     posts.title   as title
+              from   blogs
+                     inner join posts
+                       on blogs.id = posts.blog_id
+            })
+          end
+        end
+
+        describe "a projection on top of a right-associative 3-table join, projecting columns from the subquery" do
+          it "generates the appropriate sql, aliasing columns from subqueries back to their natural names" do
+            Blog.join(Post.join(Comment, Post[:id] => :post_id), Blog[:id] => :blog_id).project(:comments).to_sql.should be_like_query(%{
+              select t1.comments__id      as id,
+                     t1.comments__post_id as post_id,
+                     t1.comments__body    as body
+              from   blogs
+                     inner join (select posts.id         as posts__id,
+                                        posts.blog_id    as posts__blog_id,
+                                        posts.title      as posts__title,
+                                        comments.id      as comments__id,
+                                        comments.post_id as comments__post_id,
+                                        comments.body    as comments__body
+                                 from   posts
+                                        inner join comments
+                                          on posts.id = comments.post_id) as t1
+                       on blogs.id = t1.posts__blog_id
+            })
+          end
+        end
+      end
     end
   end
 end

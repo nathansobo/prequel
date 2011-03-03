@@ -48,6 +48,12 @@ module Keep
           blogs[1].title.should == "Blog 2"
         end
       end
+
+      describe "#to_sql" do
+        it "generates the appropriate SQL" do
+          blogs.to_sql.should be_like_query("select * from blogs")
+        end
+      end
     end
   end
 end
