@@ -730,7 +730,7 @@ var Sortable = {
       });
     }
 
-    // keep reference
+    // prequel reference
     this.sortables[element.identify()] = options;
 
     // for onupdate

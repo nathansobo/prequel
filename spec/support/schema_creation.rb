@@ -1,8 +1,8 @@
-require 'keep/relations/table'
-require 'keep/expressions/column'
-require 'keep/record'
+require 'prequel/relations/table'
+require 'prequel/expressions/column'
+require 'prequel/record'
 
-module Keep
+module Prequel
   module Relations
     class Table < Relation
       def self.created_tables

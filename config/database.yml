@@ -1,7 +1,7 @@
 development:
   adapter: postgres
-  database: keep_development
+  database: prequel_development
 
 test:
   adapter: postgres
-  database: keep_test
+  database: prequel_test

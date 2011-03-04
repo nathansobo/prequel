@@ -907,7 +907,7 @@ Object.extend(Ajax.InPlaceEditor, {
       // For backward compatibility, this one is bound to the IPE, and passes
       // the element directly.  It was too often customized, so we don't break it.
       new Effect.Highlight(element, {
-        startcolor: this.options.highlightColor, keepBackgroundImage: true });
+        startcolor: this.options.highlightColor, prequelBackgroundImage: true });
     },
     onEnterEditMode: null,
     onEnterHover: function(ipe) {
@@ -923,7 +923,7 @@ Object.extend(Ajax.InPlaceEditor, {
     onLeaveHover: function(ipe) {
       ipe._effect = new Effect.Highlight(ipe.element, {
         startcolor: ipe.options.highlightColor, endcolor: ipe.options.highlightEndColor,
-        restorecolor: ipe._originalBackground, keepBackgroundImage: true
+        restorecolor: ipe._originalBackground, prequelBackgroundImage: true
       });
     }
   },
