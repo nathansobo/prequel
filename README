@@ -1,4 +1,24 @@
 This is a testbed Rails application for the Keep ORM.
 
 TODO:
-rewrite inner join spec to directly compare composite tuple elements against records
+
+pull out as a gem with self-sufficient test suite
+
+
+relations
+----------
+test pulling counts out of the database
+add group by
+add order by
+add left outer join
+add limit and offset
+add union
+
+record functionality
+--------------------
+validations
+reload
+black and white listing
+
+
+pull into hyperarchy, get model specs passing

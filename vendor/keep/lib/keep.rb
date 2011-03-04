@@ -1,4 +1,5 @@
 module Keep
+  extend ActiveSupport::Autoload
   extend self
 
   def const_missing(name)
@@ -20,6 +21,14 @@ module Keep
   def clear_session
     Thread.current[:keep_session] = nil if Thread.current[:keep_session]
   end
-end
 
-require 'keep/core_extensions'
+  require 'keep/core_extensions'
+  autoload :CompositeTuple
+  autoload :Expressions
+  autoload :Field
+  autoload :Record
+  autoload :Relations
+  autoload :Session
+  autoload :Sql
+  autoload :Tuple
+end
