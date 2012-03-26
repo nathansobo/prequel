@@ -213,7 +213,7 @@ module Prequel
           before_save
           self.created_at = Time.now if fields_by_name.has_key?(:created_at)
           self.updated_at = Time.now if fields_by_name.has_key?(:updated_at)
-          self.id = (DB[table.name] << field_values_without_id)
+          self.id = (DB[table.name].insert field_values_without_id)
           Prequel.session[table.name][id] = self
           mark_clean
           after_create
