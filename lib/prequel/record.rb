@@ -226,7 +226,7 @@ module Prequel
 
     def save!
       if save
-        true
+        self
       else
         raise NotValid
       end
