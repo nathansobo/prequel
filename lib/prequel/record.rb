@@ -269,7 +269,7 @@ module Prequel
     def errors
       @errors ||= Prequel::Errors.new
     end
-    
+
     def validate; end
 
     def reload(*columns)

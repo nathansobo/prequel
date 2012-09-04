@@ -2,7 +2,7 @@ module Prequel
   module Relations
     class Selection < Relation
       include UnaryRelationMethods
-      
+
       attr_reader :operand, :predicate
       delegate :get_table, :infer_join_columns, :tables, :to => :operand
 
