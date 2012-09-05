@@ -1,7 +1,7 @@
 module Prequel
   class SubscriptionNode
     def initialize
-      @subscriptions = []
+      clear
     end
 
     def subscribe(&proc)
@@ -12,6 +12,10 @@ module Prequel
       subscriptions.each do |proc|
         proc.call(*args)
       end
+    end
+
+    def clear
+      @subscriptions = []
     end
 
     protected
