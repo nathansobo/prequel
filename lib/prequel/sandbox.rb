@@ -97,19 +97,19 @@ module Prequel
       wire_rep = wire_rep.with_indifferent_access
 
       case wire_rep[:type]
-      when 'table'
+      when 'Table'
         get_relation(wire_rep[:name])
-      when 'selection'
+      when 'Selection'
         Relations::Selection.new(evaluate(wire_rep[:operand]), evaluate(wire_rep[:predicate]))
-      when 'inner_join'
+      when 'InnerJoin'
         Relations::InnerJoin.new(evaluate(wire_rep[:left_operand]), evaluate(wire_rep[:right_operand]), evaluate(wire_rep[:predicate]))
-      when 'table_projection'
+      when 'Projection'
         Relations::Projection.new(evaluate(wire_rep[:operand]), wire_rep[:projected_table].to_sym)
-      when 'eq'
+      when 'Eq'
         Expressions::Equal.new(evaluate(wire_rep[:left_operand]), evaluate(wire_rep[:right_operand]))
-      when 'column'
+      when 'Column'
         "#{wire_rep[:table]}__#{wire_rep[:name]}".to_sym
-      when 'scalar'
+      when 'Scalar'
         wire_rep[:value]
       else
         raise "Can't evaluate #{wire_rep.inspect}"
