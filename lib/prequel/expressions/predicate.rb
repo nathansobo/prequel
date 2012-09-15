@@ -59,8 +59,8 @@ module Prequel
       def wire_representation
         {
           'type' => type.to_s,
-          'left_operand' => left.wire_representation,
-          'right_operand' => right.wire_representation
+          'leftOperand' => left.wire_representation,
+          'rightOperand' => right.wire_representation
         }
       end
 

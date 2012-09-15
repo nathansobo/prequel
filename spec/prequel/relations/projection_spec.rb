@@ -160,7 +160,7 @@ module Prequel
             Comment.project(:post_id.as(:comment_post_id), :body.as(:comment_body))
         end
       end
-      
+
       describe "#to_sql" do
         describe "a projection of particular columns, some with aliases" do
           it "generates the appropriate sql" do
@@ -284,9 +284,9 @@ module Prequel
           projection = Blog.join_through(Post)
 
           projection.wire_representation.should == {
-            :type => "table_projection",
+            :type => "Projection",
             :operand => projection.operand.wire_representation,
-            :projected_table => "posts"
+            :table => "posts"
           }
         end
       end

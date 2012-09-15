@@ -99,7 +99,7 @@ module Prequel
       describe "#wire_representation" do
         it "returns a JSON representation that can be evaluated in a sandbox" do
           Blog.wire_representation.should == {
-            'type' => 'table',
+            'type' => 'Table',
             'name' => 'blogs'
           }
         end

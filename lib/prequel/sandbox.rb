@@ -102,11 +102,11 @@ module Prequel
       when 'Selection'
         Relations::Selection.new(evaluate(wire_rep[:operand]), evaluate(wire_rep[:predicate]))
       when 'InnerJoin'
-        Relations::InnerJoin.new(evaluate(wire_rep[:left_operand]), evaluate(wire_rep[:right_operand]), evaluate(wire_rep[:predicate]))
+        Relations::InnerJoin.new(evaluate(wire_rep[:leftOperand]), evaluate(wire_rep[:rightOperand]), evaluate(wire_rep[:predicate]))
       when 'Projection'
-        Relations::Projection.new(evaluate(wire_rep[:operand]), wire_rep[:projected_table].to_sym)
+        Relations::Projection.new(evaluate(wire_rep[:operand]), wire_rep[:table].to_sym)
       when 'Eq'
-        Expressions::Equal.new(evaluate(wire_rep[:left_operand]), evaluate(wire_rep[:right_operand]))
+        Expressions::Equal.new(evaluate(wire_rep[:leftOperand]), evaluate(wire_rep[:rightOperand]))
       when 'Column'
         "#{wire_rep[:table]}__#{wire_rep[:name]}".to_sym
       when 'Scalar'

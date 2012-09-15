@@ -50,7 +50,7 @@ module Prequel
 
       def wire_representation
         {
-          'type' => "selection",
+          'type' => "Selection",
           'operand' => operand.wire_representation,
           'predicate' => predicate.wire_representation
         }

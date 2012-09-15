@@ -262,20 +262,20 @@ module Prequel
       describe "#wire_representation" do
         it "returns a JSON representation that can be evaluated in a sandbox" do
           Blog.where(:user_id => 1).wire_representation.should == {
-            "type" => "selection",
+            "type" => "Selection",
             "operand" => {
-              "type" => "table",
+              "type" => "Table",
               "name" => "blogs"
             },
             "predicate" => {
-              "type" => "eq",
-              "left_operand" => {
-                "type" => "column",
+              "type" => "Eq",
+              "leftOperand" => {
+                "type" => "Column",
                 "table" => "blogs",
                 "name" => "user_id"
               },
-              "right_operand" => {
-                "type" => "scalar",
+              "rightOperand" => {
+                "type" => "Scalar",
                 "value" => 1
               }
             }

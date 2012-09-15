@@ -296,7 +296,7 @@ module Prequel
                               where  blogs.user_id = :v1) as t2
                              inner join posts
                                on t2.id = posts.blog_id
-                      where  posts.title = :v2) as t1 
+                      where  posts.title = :v2) as t1
                      inner join users
                        on users.id = t1.t2__user_id
             }, :v1 => 1, :v2 => "Foo")
@@ -352,24 +352,24 @@ module Prequel
       describe "#wire_representation" do
         it "returns a JSON representation that can be evaluated in a sandbox" do
           Blog.join(Post).wire_representation.should == {
-            "type" => "inner_join",
-            "left_operand" => {
-              "type" => "table",
+            "type" => "InnerJoin",
+            "leftOperand" => {
+              "type" => "Table",
               "name" => "blogs"
             },
-            "right_operand" => {
-              "type" => "table",
+            "rightOperand" => {
+              "type" => "Table",
               "name" => "posts"
             },
             "predicate" => {
-              "type" => "eq",
-              "left_operand" => {
-                "type" => "column",
+              "type" => "Eq",
+              "leftOperand" => {
+                "type" => "Column",
                 "table" => "blogs",
                 "name" => "id"
               },
-              "right_operand" => {
-                "type" => "column",
+              "rightOperand" => {
+                "type" => "Column",
                 "table" => "posts",
                 "name" => "blog_id"
               }

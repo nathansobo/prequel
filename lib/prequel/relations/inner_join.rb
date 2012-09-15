@@ -4,9 +4,9 @@ module Prequel
 
       def wire_representation
         {
-          "type" => "inner_join",
-          "left_operand" => left.wire_representation,
-          "right_operand" => right.wire_representation,
+          "type" => "InnerJoin",
+          "leftOperand" => left.wire_representation,
+          "rightOperand" => right.wire_representation,
           "predicate" => predicate.wire_representation
         }
       end

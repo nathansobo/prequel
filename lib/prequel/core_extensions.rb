@@ -98,7 +98,7 @@ module Prequel
 
     def wire_representation
       {
-        'type' => 'scalar',
+        'type' => 'Scalar',
         'value' => self
       }
     end

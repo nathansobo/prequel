@@ -73,7 +73,7 @@ module Prequel
 
       def wire_representation
         {
-          'type' => 'table',
+          'type' => 'Table',
           'name' => name.to_s
         }
       end

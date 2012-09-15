@@ -2,7 +2,7 @@ module Prequel
   module Expressions
     class LessThanOrEqual < Predicate
       def type
-        :lte
+        :Lte
       end
 
       def operator_sql

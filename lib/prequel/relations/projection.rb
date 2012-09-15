@@ -72,9 +72,9 @@ module Prequel
       def wire_representation
         raise "Can only wire-represent table projections" unless projected_table
         {
-          :type => 'table_projection',
+          :type => 'Projection',
           :operand => operand.wire_representation,
-          :projected_table => projected_table.name.to_s
+          :table => projected_table.name.to_s
         }
       end
 

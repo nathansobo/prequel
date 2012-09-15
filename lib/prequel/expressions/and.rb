@@ -2,7 +2,7 @@ module Prequel
   module Expressions
     class And < Predicate
       def type
-        :and
+        :And
       end
 
       def operator_sql

@@ -2,7 +2,7 @@ module Prequel
   module Expressions
     class GreaterThanOrEqual < Predicate
       def type
-        :gte
+        :Gte
       end
 
       def operator_sql

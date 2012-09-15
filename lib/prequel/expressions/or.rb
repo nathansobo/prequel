@@ -2,7 +2,7 @@ module Prequel
   module Expressions
     class Or < Predicate
       def type
-        :or
+        :Or
       end
 
       def operator_sql
