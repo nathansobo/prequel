@@ -133,10 +133,14 @@ module Prequel
       end
 
       def clear
+        clear_subscriptions
+        relation.clear
+      end
+
+      def clear_subscriptions
         on_create_node.clear
         on_update_node.clear
         on_destroy_node.clear
-        relation.clear
       end
     end
 

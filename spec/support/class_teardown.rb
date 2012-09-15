@@ -8,6 +8,7 @@ module Prequel
   class Record
     def self.remove_class
       super
+      clear_subscriptions
       Prequel.record_classes.delete(self)
     end
   end

@@ -15,10 +15,10 @@ RSpec.configure do |config|
   config.include BeLikeQueryMatcher
   config.include TimeTravel
   config.after do
-    Prequel::Relations::Table.drop_all_tables
     Prequel::Record.subclasses.each do |subclass|
       subclass.remove_class
     end
+    Prequel::Relations::Table.drop_all_tables
     Prequel.clear_session
   end
 end
