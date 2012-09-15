@@ -238,7 +238,7 @@ module Prequel
 
           expect {
             Blog.secure_create(:title => "Hola!").should be_false
-          }.should_not change(Blog, :count)
+          }.to_not change(Blog, :count)
         end
       end
 
@@ -607,7 +607,7 @@ module Prequel
               blog.after_update
               blog.after_save
             end
-            
+
             blog.should be_clean
             blog.save.should be_true
             blog.updated_at.should == 1.minute.ago
@@ -815,7 +815,7 @@ module Prequel
 
           post.set_field_value(:boolean_field, 'false')
           post.boolean_field.should be_false
-          
+
           post.set_field_value(:boolean_field, '1')
           post.boolean_field.should be_true
 
@@ -919,7 +919,7 @@ module Prequel
             :subtitle => nil,
             :user_id => 1
           }
-          
+
 
           stub(blog).can_update? { true }
         end

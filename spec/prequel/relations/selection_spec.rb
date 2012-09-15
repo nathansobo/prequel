@@ -94,7 +94,7 @@ module Prequel
                 blog.id.should_not be_nil
                 blog.user_id.should == 1
                 blog.title.should == "My Blog"
-              }.should change(Blog, :count).by(1)
+              }.to change(Blog, :count).by(1)
             end
           end
         end
@@ -123,7 +123,7 @@ module Prequel
                 blog.id.should_not be_nil
                 blog.user_id.should == 1
                 blog.title.should == "My Blog"
-              }.should change(Blog, :count).by(1)
+              }.to change(Blog, :count).by(1)
             end
           end
         end

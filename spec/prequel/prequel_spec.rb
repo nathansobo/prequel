@@ -21,7 +21,7 @@ describe Prequel do
         Prequel.transaction do
           raise "boom!"
         end
-      }.should raise_error("boom!")
+      }.to raise_error("boom!")
       Prequel.session.transaction_depth.should == 0
     end
 
@@ -45,7 +45,7 @@ describe Prequel do
       mock(Prequel.session).flush_deferred_events.once do
         Prequel.session.transaction_depth.should == 1
       end
-      
+
       Prequel.session.transaction_depth.should == 0
       Prequel.transaction do
         Prequel.session.transaction_depth.should == 1
@@ -169,7 +169,7 @@ describe Prequel do
       Object.send(:remove_const, :Foo)
       class Foo
       end
-      
+
       Prequel.get_subscription_node(Foo, :on_create).should equal(foo_node)
     end
   end

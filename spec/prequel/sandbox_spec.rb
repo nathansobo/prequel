@@ -93,7 +93,7 @@ module Prequel
         end
       end
     end
-    
+
     describe "#evaluate(relation_wire_representation)" do
       context "when given a table wire representation" do
         it "translates it to the corresponding exposed relation" do
