@@ -105,7 +105,7 @@ module Prequel
         Relations::InnerJoin.new(evaluate(wire_rep[:leftOperand]), evaluate(wire_rep[:rightOperand]), evaluate(wire_rep[:predicate]))
       when 'Projection'
         Relations::Projection.new(evaluate(wire_rep[:operand]), wire_rep[:table].to_sym)
-      when 'Eq'
+      when 'Equal'
         Expressions::Equal.new(evaluate(wire_rep[:leftOperand]), evaluate(wire_rep[:rightOperand]))
       when 'Column'
         "#{wire_rep[:table]}__#{wire_rep[:name]}".to_sym
