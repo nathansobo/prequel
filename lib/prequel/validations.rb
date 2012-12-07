@@ -23,5 +23,14 @@ module Prequel
         end
       end
     end
+
+    def validates_confirmation_of(attr1, options={})
+      attr2 = "#{attr1}_confirmation".to_sym
+      validate do
+        if send(attr1) != send(attr2)
+          errors.add(column_name, options[:message] || "#{attr1.humanize.capitalize} did not match #{attr2.humanize}")
+        end
+      end
+    end
   end
 end
