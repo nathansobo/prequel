@@ -830,7 +830,15 @@ module Prequel
 
           post.set_field_value(:boolean_field, nil)
           post.boolean_field.should be_nil
+        end
 
+        it "converts blank strings to nil" do
+          post.set_field_value(:integer_field, '')
+          post.integer_field.should be_nil
+          post.set_field_value(:float_field, '')
+          post.float_field.should be_nil
+          post.set_field_value(:boolean_field, '')
+          post.float_field.should be_nil
         end
       end
 

@@ -47,9 +47,9 @@ module Prequel
       def normalize_field_value(value)
         case type
           when :integer
-            value.nil?? nil : Integer(value)
+            value.blank?? nil : Integer(value)
           when :float
-            value.nil?? nil : Float(value)
+            value.blank?? nil : Float(value)
           when :datetime
             normalize_datetime_value(value)
           when :boolean
@@ -96,7 +96,7 @@ module Prequel
             true
           when false, 'false', 0, '0'
             false
-          when NilClass
+          when NilClass, ''
             nil
           else
             raise "Can't convert value #{value.inspect} for storage as a :boolean"
