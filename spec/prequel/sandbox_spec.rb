@@ -21,6 +21,10 @@ module Prequel
 
         has_many :comments
 
+        def create_whitelist
+          super + [:disallow_create]
+        end
+
         def can_create?
           !disallow_create
         end
@@ -134,7 +138,7 @@ module Prequel
       end
 
       describe "#create(relation_name, field_values)" do
-        context "when the created record is valid" do
+        describe "when the relation exists" do
           attr_reader :blog_1, :blog_2
           before do
             Post.create_table
@@ -143,53 +147,57 @@ module Prequel
           end
 
           describe "when the record's #can_create? method returns true" do
-            context "when the created record ends up being a member of the exposed relation" do
-              it "returns the a '200 ok' response with the wire representation of the created record" do
-                Post.should be_empty
-                status, response = sandbox.create('posts', { 'blog_id' => blog_1.id, 'title' => 'Post Title' })
-                status.should == 200
-                response.should == Post.first.wire_representation
+            context "when the created record is valid" do
+              context "when the created record ends up being a member of the exposed relation" do
+                it "returns the a '200 ok' response with the wire representation of the created record" do
+                  expect do
+                    status, response = sandbox.create('posts', { 'blog_id' => blog_1.id, 'title' => 'Post Title' })
+                    status.should == 200
+                    response.should == Post.first.wire_representation
+                  end.to change Post, :count
+                end
+              end
+
+              context "when the created record does not end up being a member of the exposed relation" do
+                it "returns '403 forbidden' as its status and does not create the record" do
+                  expect do
+                    status, response = sandbox.create('posts', { 'blog_id' => blog_2.id, 'title' => 'Post Title' })
+                    status.should == 403
+                  end.to_not change Post, :count
+                end
               end
             end
 
-            context "when the created record does not end up being a member of the exposed relation" do
-              it "returns '403 forbidden' as its status and does not create the record" do
-                Post.should be_empty
-                status, response = sandbox.create('posts', { 'blog_id' => blog_2.id, 'title' => 'Post Title' })
-                status.should == 403
-                Post.should be_empty
+            context "when the created record is invalid" do
+              before do
+                class ::Blog
+                  def validate
+                    errors.add(:title, "Title must be in Spanish.")
+                    errors.add(:user_id, "User must be from Spain.")
+                  end
+                end
+              end
+
+              it "returns a '422 unprocessable entity' with the validation errors" do
+                expect do
+                  status, response = sandbox.create('blogs', { 'user_id' => 1, 'title' => 'Blog Title' })
+                  status.should == 422
+                  response.should == {
+                    :title => ["Title must be in Spanish."],
+                    :user_id => ["User must be from Spain."]
+                  }
+                end.to_not change Blog, :count
               end
             end
           end
 
           describe "when the record's #can_create? method returns false" do
             it "returns '403 forbidden' as its status and does not create the record" do
-              Post.should be_empty
-              status, response = sandbox.create('posts', { 'disallow_create' => true, 'blog_id' => blog_1.id, 'title' => 'Post Title' })
-              status.should == 200
-              response.should == Post.first.wire_representation
+              expect do
+                status, response = sandbox.create('posts', { 'disallow_create' => true, 'blog_id' => blog_1.id, 'title' => 'Post Title' })
+                status.should == 403
+              end.to_not change Post, :count
             end
-          end
-        end
-
-        context "when the created record is invalid" do
-          before do
-            class ::Blog
-              def validate
-                errors.add(:title, "Title must be in Spanish.")
-                errors.add(:user_id, "User must be from Spain.")
-              end
-            end
-          end
-
-          it "returns a '422 unprocessable entity' with the validation errors" do
-            Blog.should be_empty
-            status, response = sandbox.create('blogs', { 'user_id' => 1, 'title' => 'Blog Title' })
-            status.should == 422
-            response.should == {
-              :title => ["Title must be in Spanish."],
-              :user_id => ["User must be from Spain."]
-            }
           end
         end
 
