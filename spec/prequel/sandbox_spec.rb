@@ -17,8 +17,13 @@ module Prequel
         column :id, :integer
         column :blog_id, :integer
         column :title, :string
+        attr_accessor :disallow_create
 
         has_many :comments
+
+        def can_create?
+          !disallow_create
+        end
       end
 
       class ::Comment < Prequel::Record
@@ -43,7 +48,6 @@ module Prequel
 
       @sandbox = TestSandbox.new
     end
-
 
     describe "#fetch(*relation_wire_representations)" do
       attr_reader :blog_1, :blog_2, :blog_3, :post_1, :post_2, :post_3, :comment_1, :comment_2, :comment_3
@@ -138,21 +142,32 @@ module Prequel
             @blog_2 = Blog.create(:user_id => 2)
           end
 
-          context "when the created record ends up being a member of the exposed relation" do
-            it "returns the a '200 ok' response with the wire representation of the created record" do
-              Post.should be_empty
-              status, response = sandbox.create('posts', { 'blog_id' => blog_1.id, 'title' => 'Post Title' })
-              status.should == 200
-              response.should == Post.first.wire_representation
+          describe "when the record's #can_create? method returns true" do
+            context "when the created record ends up being a member of the exposed relation" do
+              it "returns the a '200 ok' response with the wire representation of the created record" do
+                Post.should be_empty
+                status, response = sandbox.create('posts', { 'blog_id' => blog_1.id, 'title' => 'Post Title' })
+                status.should == 200
+                response.should == Post.first.wire_representation
+              end
+            end
+
+            context "when the created record does not end up being a member of the exposed relation" do
+              it "returns '403 forbidden' as its status and does not create the record" do
+                Post.should be_empty
+                status, response = sandbox.create('posts', { 'blog_id' => blog_2.id, 'title' => 'Post Title' })
+                status.should == 403
+                Post.should be_empty
+              end
             end
           end
 
-          context "when the created record does not end up being a member of the exposed relation" do
-            it "returns '403 forbidden' as its status" do
+          describe "when the record's #can_create? method returns false" do
+            it "returns '403 forbidden' as its status and does not create the record" do
               Post.should be_empty
-              status, response = sandbox.create('posts', { 'blog_id' => blog_2.id, 'title' => 'Post Title' })
-              status.should == 403
-              Post.should be_empty
+              status, response = sandbox.create('posts', { 'disallow_create' => true, 'blog_id' => blog_1.id, 'title' => 'Post Title' })
+              status.should == 200
+              response.should == Post.first.wire_representation
             end
           end
         end

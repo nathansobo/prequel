@@ -2,7 +2,7 @@ module Prequel
   module Relations
     class Projection < Relation
       attr_reader :operand
-      delegate :new, :to => :projected_table
+      delegate :new, :secure_new, :to => :projected_table
 
       def initialize(operand, *expressions)
         @operand = operand

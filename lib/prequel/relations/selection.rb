@@ -32,6 +32,10 @@ module Prequel
         operand.new(predicate.enhance_attributes(attributes))
       end
 
+      def secure_new(attributes={})
+        operand.secure_new(predicate.enhance_attributes(attributes))
+      end
+
       def visit(query)
         operand.visit(query)
         query.add_condition(predicate.resolve_in_query(query))

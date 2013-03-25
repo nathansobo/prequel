@@ -153,9 +153,9 @@ module Prequel
     end
 
     def secure_initialize(values={})
-      return false unless can_create?
       permitted_field_names = create_whitelist - create_blacklist
       initialize(values.slice(*permitted_field_names))
+      return false unless can_create?
       self
     end
 

@@ -11,9 +11,11 @@ Prequel::DB # touch the Prequel::DB constant so it gets assigned to the connecti
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each {|f| require f}
 
 RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.mock_with :rr
   config.include BeLikeQueryMatcher
   config.include TimeTravel
+
   config.after do
     Prequel::Record.subclasses.each do |subclass|
       subclass.remove_class

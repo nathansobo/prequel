@@ -20,6 +20,8 @@ module Prequel
     delegate :exposed_relation_definitions, :to => 'self.class'
 
     def create(relation_name, field_values)
+      field_values.symbolize_keys!
+
       response = nil
       Prequel.transaction do
         relation = get_relation(relation_name)
@@ -27,22 +29,28 @@ module Prequel
           response = [404, "Relation #{relation_name} not found."]
           raise Prequel::Rollback
         end
-        record = relation.new(field_values)
-        if record.save
-          if relation.find(record.id)
-            response = [200, record.wire_representation]
+
+        if record = relation.secure_new(field_values)
+          if record.save
+            if relation.find(record.id)
+              response = [200, record.wire_representation]
+            else
+              response = [403, "Create operation forbidden (out of bounds)."]
+              raise Prequel::Rollback
+            end
           else
-            response = [403, "Create operation forbidden."]
-            raise Prequel::Rollback
+            response = [422, record.errors]
           end
         else
-          response = [422, record.errors]
+          response = [403, "Create operation forbidden."]
         end
       end
       response
     end
 
     def update(relation_name, id, field_values)
+      field_values.symbolize_keys!
+
       response = nil
       Prequel.transaction do
         relation = get_relation(relation_name)
