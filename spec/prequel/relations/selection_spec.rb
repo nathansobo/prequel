@@ -268,7 +268,7 @@ module Prequel
               "name" => "blogs"
             },
             "predicate" => {
-              "type" => "Eq",
+              "type" => "Equal",
               "leftOperand" => {
                 "type" => "Column",
                 "table" => "blogs",

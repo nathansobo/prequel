@@ -362,7 +362,7 @@ module Prequel
               "name" => "posts"
             },
             "predicate" => {
-              "type" => "Eq",
+              "type" => "Equal",
               "leftOperand" => {
                 "type" => "Column",
                 "table" => "blogs",

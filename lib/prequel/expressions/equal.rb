@@ -6,7 +6,7 @@ module Prequel
       end
 
       def type
-        :Eq
+        :Equal
       end
 
       def operator_sql
