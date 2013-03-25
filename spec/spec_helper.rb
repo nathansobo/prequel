@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(File.expand_path("../../lib", __FILE__))
 require 'prequel'
 require 'machinist'
 require 'prequel/machinist_adaptor'
-Sequel.postgres("prequel_test")
+Sequel.postgres("prequel_test", :host => '/tmp', :port => 15432)
 Prequel::DB # touch the Prequel::DB constant so it gets assigned to the connection made above
 
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each {|f| require f}
