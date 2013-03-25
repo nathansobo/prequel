@@ -83,3 +83,10 @@ module Prequel
   autoload :Validations
   autoload :Errors
 end
+
+module ActiveSupport
+  class HashWithIndifferentAccess
+    def symbolize_keys!
+    end
+  end
+end
