@@ -216,6 +216,13 @@ module Prequel
           @blog = Blog.create!(:title => "Blog Title", :user_id => 1)
         end
 
+        context "when the relation does not exist" do
+          it "returns '404 not found'" do
+            status, response = sandbox.update('junk', blog.id, { 'user_id' => 90, 'title' => "New Title" })
+            status.should == 404
+          end
+        end
+
         context "when the record with the given id is NOT a member of the exposed relation" do
           attr_reader :other_blog
           before do
@@ -260,13 +267,6 @@ module Prequel
               status, response = sandbox.update('blogs', blog.id, { 'user_id' => 90, 'title' => "New Title" })
               blog.reload.title.should == "Blog Title"
               status.should == 403
-            end
-          end
-
-          context "when the relation does not exist" do
-            it "returns '404 not found'" do
-              status, response = sandbox.update('junk', blog.id, { 'user_id' => 90, 'title' => "New Title" })
-              status.should == 404
             end
           end
         end
