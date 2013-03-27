@@ -839,6 +839,8 @@ module Prequel
           post.float_field.should be_nil
           post.set_field_value(:boolean_field, '')
           post.float_field.should be_nil
+          post.set_field_value(:datetime_field, '')
+          post.datetime_field.should be_nil
         end
       end
 

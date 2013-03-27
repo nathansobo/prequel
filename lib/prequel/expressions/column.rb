@@ -51,7 +51,7 @@ module Prequel
           when :float
             value.blank?? nil : Float(value)
           when :datetime
-            normalize_datetime_value(value)
+            value.blank?? nil : normalize_datetime_value(value)
           when :boolean
             normalize_boolean_value(value)
           else
