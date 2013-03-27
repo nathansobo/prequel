@@ -297,10 +297,28 @@ module Prequel
         end
 
         context "when a record with the given id is a member of the exposed relation" do
-          it "destroys the record and returns '200 ok'" do
-            status, response = sandbox.destroy('blogs', blog.id)
-            status.should == 200
-            Blog.find(blog.id).should be_nil
+          describe "when the record's #can_destroy? method returns true" do
+            it "destroys the record and returns '200 ok'" do
+              status, response = sandbox.destroy('blogs', blog.id)
+              status.should == 200
+              Blog.find(blog.id).should be_nil
+            end
+          end
+
+          describe "when the record's #can_destroy? method returns false" do
+            before do
+              class ::Blog
+                def can_destroy?
+                  false
+                end
+              end
+            end
+
+            it "returns '403 forbidden' and does not destroy the record" do
+              status, response = sandbox.destroy('blogs', blog.id)
+              status.should == 403
+              Blog.find(blog.id).should == blog
+            end
           end
         end
 

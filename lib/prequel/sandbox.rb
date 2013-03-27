@@ -87,8 +87,11 @@ module Prequel
       return [404, "No relation #{relation_name} found"] unless relation
       record = relation.find(id)
       return [404, "No record #{id} found in #{relation_name}"] unless record
-      record.destroy
-      200
+      if record.secure_destroy
+        200
+      else
+        [403, "Destroy operation forbidden"]
+      end
     end
 
     def fetch(*wire_reps)
