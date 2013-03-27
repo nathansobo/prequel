@@ -35,14 +35,14 @@ module Prequel
             if relation.find(record.id)
               response = [200, record.wire_representation]
             else
-              response = [403, "Create operation forbidden (out of bounds)."]
+              response = [403, "Create operation forbidden (out of bounds)"]
               raise Prequel::Rollback
             end
           else
             response = [422, record.errors]
           end
         else
-          response = [403, "Create operation forbidden."]
+          response = [403, "Create operation forbidden"]
         end
       end
       response
@@ -63,16 +63,20 @@ module Prequel
           response = [404, "No record with id #{id} found in #{relation_name}"]
           raise Prequel::Rollback
         end
-        record.soft_update(field_values)
-        if record.save
-          if relation.find(id)
-            response = [200, record.wire_representation]
+
+        if record.secure_soft_update(field_values)
+          if record.save
+            if relation.find(id)
+              response = [200, record.wire_representation]
+            else
+              response = [403, "Update operation forbidden (out of bounds)"]
+              raise Prequel::Rollback
+            end
           else
-            response = [403, "Update operation forbidden."]
-            raise Prequel::Rollback
+            response = [422, record.errors]
           end
         else
-          response = [422, record.errors]
+          response = [403, "Update operation forbidden"]
         end
       end
       response

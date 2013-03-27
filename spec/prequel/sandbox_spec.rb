@@ -236,37 +236,55 @@ module Prequel
         end
 
         context "when the record with the given id is a member of the exposed relation" do
-          context "when the update leaves the record in a valid state" do
-            it "returns '200 ok' with the wire representation of the updated record" do
-              status, response = sandbox.update('blogs', blog.id, { 'title' => "New Title" })
-              blog.reload.title.should == "New Title"
-              status.should == 200
-              response.should == blog.wire_representation
+          describe "when the record's #can_update? method returns true" do
+            context "when the update leaves the record in a valid state" do
+              it "returns '200 ok' with the wire representation of the updated record" do
+                status, response = sandbox.update('blogs', blog.id, { 'title' => "New Title" })
+                blog.reload.title.should == "New Title"
+                status.should == 200
+                response.should == blog.wire_representation
+              end
+            end
+
+            context "when the update leaves the record in an invalid state" do
+              before do
+                class ::Blog
+                  def validate
+                    errors.add(:title, "Title must be in Spanish.")
+                  end
+                end
+              end
+
+              it "returns '422 unprocessable entity' with the validation errors" do
+                status, response = sandbox.update('blogs', blog.id, { 'title' => "New Title" })
+                blog.reload.title.should == "Blog Title"
+                status.should == 422
+                response.should == blog.errors
+              end
+            end
+
+            context "when the update causes the record to no longer be a member of the exposed relation" do
+              it "returns '403 forbidden' as its status and does not commit the transaction to update the record" do
+                status, response = sandbox.update('blogs', blog.id, { 'user_id' => 90, 'title' => "New Title" })
+                blog.reload.title.should == "Blog Title"
+                status.should == 403
+              end
             end
           end
 
-          context "when the update leaves the record in an invalid state" do
+          describe "when the record's #can_update? method returns false" do
             before do
               class ::Blog
-                def validate
-                  errors.add(:title, "Title must be in Spanish.")
+                def can_update?
+                  false
                 end
               end
             end
 
-            it "returns '422 unprocessable entity' with the validation errors" do
+            it "returns '403 forbidden' as its status and does not update the record" do
               status, response = sandbox.update('blogs', blog.id, { 'title' => "New Title" })
-              blog.reload.title.should == "Blog Title"
-              status.should == 422
-              response.should == blog.errors
-            end
-          end
-
-          context "when the update causes the record to no longer be a member of the exposed relation" do
-            it "returns '403 forbidden' as its status and does not commit the transaction to update the record" do
-              status, response = sandbox.update('blogs', blog.id, { 'user_id' => 90, 'title' => "New Title" })
-              blog.reload.title.should == "Blog Title"
               status.should == 403
+              blog.reload.title.should == "Blog Title"
             end
           end
         end

@@ -181,9 +181,13 @@ module Prequel
       save!
     end
 
-    def secure_update(attributes)
+    def secure_soft_update(attributes)
       return false unless can_update?
       soft_update(attributes.slice(*update_whitelist - update_blacklist))
+    end
+
+    def secure_update(attributes)
+      return false unless secure_soft_update(attributes)
       save
     end
 
