@@ -2,7 +2,7 @@ module Prequel
   module Expressions
     class NotEqual < Predicate
       def type
-        :Neq
+        :NotEqual
       end
 
       def operator_sql
