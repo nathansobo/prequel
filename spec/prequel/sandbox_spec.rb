@@ -17,17 +17,8 @@ module Prequel
         column :id, :integer
         column :blog_id, :integer
         column :title, :string
-        attr_accessor :disallow_create
 
         has_many :comments
-
-        def create_whitelist
-          super + [:disallow_create]
-        end
-
-        def can_create?
-          !disallow_create
-        end
       end
 
       class ::Comment < Prequel::Record
@@ -192,9 +183,17 @@ module Prequel
           end
 
           describe "when the record's #can_create? method returns false" do
+            before do
+              class ::Post
+                def can_create?
+                  false
+                end
+              end
+            end
+
             it "returns '403 forbidden' as its status and does not create the record" do
               expect do
-                status, response = sandbox.create('posts', { 'disallow_create' => true, 'blog_id' => blog_1.id, 'title' => 'Post Title' })
+                status, response = sandbox.create('posts', { 'blog_id' => blog_1.id, 'title' => 'Post Title' })
                 status.should == 403
               end.to_not change Post, :count
             end
