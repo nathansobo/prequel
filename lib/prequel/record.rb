@@ -3,8 +3,9 @@ module Prequel
     class << self
       include Validations
       delegate :all, :update, :dataset, :count, :[], :to_update_sql, :to_sql, :get_column, :first, :empty?, :find,
-               :where, :where_any, :join, :join_through, :left_join, :project, :group_by, :order_by, :limit,
-               :offset, :tables, :synthetic_columns, :wire_representation, :each, :each_with_index, :map,
+               :find_or_create, :find_or_create!, :where, :where_any, :join, :join_through, :left_join, :project,
+               :group_by, :order_by, :limit, :offset, :tables, :synthetic_columns, :wire_representation, :each,
+               :each_with_index, :map,
                :to => :relation
 
       def table

@@ -21,11 +21,12 @@ module Prequel
 
       def find_or_create(attributes, bang=false)
         enhanced_attributes = predicate.enhance_attributes(attributes)
-        operand.find(enhanced_attributes) || (bang ? operand.create!(enhanced_attributes) : operand.create(enhanced_attributes))
+        operand.find_or_create(enhanced_attributes)
       end
 
       def find_or_create!(attributes)
-        find_or_create(attributes, :bang)
+        enhanced_attributes = predicate.enhance_attributes(attributes)
+        operand.find_or_create!(enhanced_attributes)
       end
 
       def new(attributes={})
@@ -62,4 +63,3 @@ module Prequel
     end
   end
 end
-

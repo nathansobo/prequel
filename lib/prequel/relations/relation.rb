@@ -47,6 +47,14 @@ module Prequel
         where(predicate).first
       end
 
+      def find_or_create(attributes, bang=false)
+        find(attributes) || (bang ? create!(attributes) : create(attributes))
+      end
+
+      def find_or_create!(attributes)
+        find_or_create(attributes, :bang)
+      end
+
       def where(predicate)
         Selection.new(self, predicate)
       end
