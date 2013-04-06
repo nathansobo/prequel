@@ -19,6 +19,10 @@ module Prequel
     def initialize(attributes={})
       initialize_fields
       soft_update(attributes)
+      after_initialize
+    end
+
+    def after_initialize
     end
 
     delegate :columns, :to => :relation
@@ -100,4 +104,3 @@ module Prequel
     end
   end
 end
-
