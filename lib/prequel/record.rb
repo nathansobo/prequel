@@ -323,7 +323,7 @@ module Prequel
     end
 
     def add_to_client_dataset(dataset)
-      dataset[table.name.to_s][to_param] ||= wire_representation
+      dataset[table.name.to_s][id.to_s] ||= wire_representation
     end
 
     def <=>(other)
